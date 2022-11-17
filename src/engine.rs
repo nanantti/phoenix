@@ -1,6 +1,12 @@
 // Graphics
 pub const BACKGROUND_COLOR: macroquad::prelude::Color = macroquad::prelude::BLACK;
 pub const LINE_COLOR: macroquad::prelude::Color = macroquad::prelude::GREEN;
+pub const BACK_COLOR: macroquad::color::Color = macroquad::color::Color { //#4F5458
+    r: 79.0,
+    g: 84.0,
+    b: 88.0,
+    a: 1.0,
+};
 
 pub fn clear_background() {
     macroquad::prelude::clear_background(BACKGROUND_COLOR);
