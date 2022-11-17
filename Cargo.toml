@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 macroquad = "0.3.16"
+vector2d = "2.2.0"
+vector3d = "0.2.1"
