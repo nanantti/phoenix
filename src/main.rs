@@ -1,6 +1,7 @@
 mod engine;
 mod map;
 mod projection;
+mod rectangle;
 
 pub struct Game {
     game_map: map::Map,
