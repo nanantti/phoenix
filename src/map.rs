@@ -10,12 +10,10 @@ pub struct Map {
 
 impl Map {
     pub fn new(camera_height: f32, z_max: f32, horizon_delta: f32, map_width: f32) -> Map {
-        let horizon_drop: f32 = horizon_delta / camera_height;
-        let fov_distance = z_max / (1.0 + 1.0 / horizon_drop);
         Map {
             camera_height,
             z_max,
-            fov_distance,
+            fov_distance: Self::calculate_fov(camera_height, z_max, horizon_delta),
             map_width,
         }
     }
@@ -38,6 +36,11 @@ impl Map {
             self.draw_horizontal_line(z, camera_height);
             z += tile_size;
         }
+    }
+
+    fn calculate_fov(camera_height: f32, z_max: f32, horizon_delta: f32) -> f32 {
+        let horizon_drop: f32 = horizon_delta / camera_height;
+        return z_max / (1.0 + 1.0 / horizon_drop);
     }
 
     fn draw_vertical_line(&self, x: f32, camera_height: f32, draw_distance: f32) {
