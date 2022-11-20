@@ -22,9 +22,9 @@ impl Player {
         self.y
     }
 
-    pub fn draw(&self) {
-        self.shape.draw(self.y);
-        self.shape.draw(self.y - FLOAT_HEIGHT);
+    pub fn draw(&self, fov_distance: f32) {
+        self.shape.draw(self.y, fov_distance);
+        self.shape.draw(self.y - FLOAT_HEIGHT, fov_distance);
     }
 }
 

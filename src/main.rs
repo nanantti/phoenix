@@ -7,6 +7,7 @@ mod rectangle;
 pub struct Game {
     game_map: map::Map,
     phoenix: player::Player,
+    fov_distance: f32,
 }
 
 impl Game {
@@ -16,12 +17,13 @@ impl Game {
         Game {
             game_map: map::Map::new(camera_height, z_max, horizon_delta, map_width),
             phoenix: player::Player::new(-camera_height),
+            fov_distance: projection::calculate_fov(camera_height, z_max, horizon_delta),
         }
     }
     pub fn update(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {}
     pub fn draw(&self) {
-        self.game_map.draw_grid();
-        self.phoenix.draw();
+        self.game_map.draw_grid(self.fov_distance);
+        self.phoenix.draw(self.fov_distance);
     }
     pub fn check_game_over(&self) -> bool {
         return false;
