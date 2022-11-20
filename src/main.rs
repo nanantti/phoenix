@@ -1,5 +1,6 @@
 mod engine;
 mod map;
+mod obstacle;
 mod player;
 mod projection;
 mod rectangle;
@@ -22,7 +23,7 @@ impl Game {
     }
     pub fn update(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {}
     pub fn draw(&self) {
-        self.game_map.draw_grid(self.fov_distance);
+        self.game_map.draw(self.fov_distance);
         self.phoenix.draw(self.fov_distance);
     }
     pub fn check_game_over(&self) -> bool {

@@ -1,10 +1,12 @@
 use super::engine;
+use super::obstacle;
 use super::projection;
 
 pub struct Map {
     camera_height: f32,
     z_max: f32,
     map_width: f32,
+    obstacle: obstacle::Obstacle,
 }
 
 impl Map {
@@ -13,11 +15,17 @@ impl Map {
             camera_height,
             z_max,
             map_width,
+            obstacle: obstacle::Obstacle::new((200.0, 200.0), (100.0, 100.0), 400.0),
         }
     }
 
+    pub fn draw(&self, fov_distance: f32) {
+        self.draw_grid(fov_distance);
+        self.obstacle.draw(fov_distance, -self.camera_height);
+    }
+
     pub fn draw_grid(&self, fov_distance: f32) {
-        let n_tiles_size_to_side = 14;
+        let n_tiles_size_to_side = 8;
         let tile_size = self.map_width / (n_tiles_size_to_side as f32);
         let draw_distance = self.z_max;
 
