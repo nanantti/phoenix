@@ -29,26 +29,26 @@ impl Rectangle {
         let z_near = self.center.1 - 0.50 * self.size.1;
         let z_far = self.center.1 + 0.50 * self.size.1;
 
-        let P1 = vector3d::Vector3d::new(x_left, y, z_far);
-        let P2 = vector3d::Vector3d::new(x_righ, y, z_far);
-        let P3 = vector3d::Vector3d::new(x_righ, y, z_near);
-        let P4 = vector3d::Vector3d::new(x_left, y, z_near);
+        let p1 = vector3d::Vector3d::new(x_left, y, z_far);
+        let p2 = vector3d::Vector3d::new(x_righ, y, z_far);
+        let p3 = vector3d::Vector3d::new(x_righ, y, z_near);
+        let p4 = vector3d::Vector3d::new(x_left, y, z_near);
 
         engine::draw_line(
-            projection::ToScreen(P1, fov_distance),
-            projection::ToScreen(P2, fov_distance),
+            projection::to_screen(p1, fov_distance),
+            projection::to_screen(p2, fov_distance),
         );
         engine::draw_line(
-            projection::ToScreen(P2, fov_distance),
-            projection::ToScreen(P3, fov_distance),
+            projection::to_screen(p2, fov_distance),
+            projection::to_screen(p3, fov_distance),
         );
         engine::draw_line(
-            projection::ToScreen(P3, fov_distance),
-            projection::ToScreen(P4, fov_distance),
+            projection::to_screen(p3, fov_distance),
+            projection::to_screen(p4, fov_distance),
         );
         engine::draw_line(
-            projection::ToScreen(P4, fov_distance),
-            projection::ToScreen(P1, fov_distance),
+            projection::to_screen(p4, fov_distance),
+            projection::to_screen(p1, fov_distance),
         );
     }
 }

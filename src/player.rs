@@ -23,8 +23,8 @@ impl Player {
     }
 
     pub fn draw(&self, fov_distance: f32) {
-        self.shape.draw(self.y, fov_distance);
-        self.shape.draw(self.y - FLOAT_HEIGHT, fov_distance);
+        self.shape.draw(self.get_y(), fov_distance);
+        self.shape.draw(self.get_y() - FLOAT_HEIGHT, fov_distance);
     }
 }
 

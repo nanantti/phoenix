@@ -8,7 +8,7 @@ pub struct Map {
 }
 
 impl Map {
-    pub fn new(camera_height: f32, z_max: f32, horizon_delta: f32, map_width: f32) -> Map {
+    pub fn new(camera_height: f32, z_max: f32, map_width: f32) -> Map {
         Map {
             camera_height,
             z_max,
@@ -20,7 +20,6 @@ impl Map {
         let n_tiles_size_to_side = 14;
         let tile_size = self.map_width / (n_tiles_size_to_side as f32);
         let draw_distance = self.z_max;
-        let camera_height = self.camera_height;
 
         let mut x = 0.0;
         while x <= self.map_width * 0.50 {
@@ -40,8 +39,8 @@ impl Map {
         let bottom = vector3d::Vector3d::new(x, -self.camera_height, 0.0);
         let top = vector3d::Vector3d::new(x, -self.camera_height, self.z_max);
         engine::draw_line(
-            projection::ToScreen(bottom, fov_distance),
-            projection::ToScreen(top, fov_distance),
+            projection::to_screen(bottom, fov_distance),
+            projection::to_screen(top, fov_distance),
         );
     }
 
@@ -50,8 +49,8 @@ impl Map {
         let left = vector3d::Vector3d::new(x, -self.camera_height, z);
         let right = vector3d::Vector3d::new(-x, -self.camera_height, z);
         engine::draw_line(
-            projection::ToScreen(left, fov_distance),
-            projection::ToScreen(right, fov_distance),
+            projection::to_screen(left, fov_distance),
+            projection::to_screen(right, fov_distance),
         );
     }
 }

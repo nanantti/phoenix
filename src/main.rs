@@ -15,7 +15,7 @@ impl Game {
         let horizon_delta = 10.0;
         let z_max = 4000.0;
         Game {
-            game_map: map::Map::new(camera_height, z_max, horizon_delta, map_width),
+            game_map: map::Map::new(camera_height, z_max, map_width),
             phoenix: player::Player::new(-camera_height),
             fov_distance: projection::calculate_fov(camera_height, z_max, horizon_delta),
         }
