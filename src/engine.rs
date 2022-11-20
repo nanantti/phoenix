@@ -35,7 +35,7 @@ pub fn get_screen_height() -> f32 {
     macroquad::prelude::screen_height()
 }
 
-fn get_screen_width() -> f32 {
+pub fn get_screen_width() -> f32 {
     macroquad::prelude::screen_width()
 }
 
