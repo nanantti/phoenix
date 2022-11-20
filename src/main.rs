@@ -8,7 +8,7 @@ pub struct Game {
 
 impl Game {
     pub fn new(camera_height: f32, map_width: f32) -> Game {
-        let horizon_delta = 0.001;
+        let horizon_delta = 10.0;
         let z_max = 4000.0;
         Game {
             game_map: map::Map::new(camera_height, z_max, horizon_delta, map_width),
