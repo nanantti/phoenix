@@ -1,3 +1,6 @@
+use super::engine;
+use super::projection;
+
 pub struct Rectangle {
     center: (f32, f32),
     size: (f32, f32),
@@ -18,6 +21,23 @@ impl Rectangle {
             return true;
         }
         return false;
+    }
+
+    pub fn draw(&self, y: f32) {
+        let x_left = self.center.0 - 0.50 * self.size.0;
+        let x_righ = self.center.0 + 0.50 * self.size.0;
+        let z_near = self.center.1 - 0.50 * self.size.1;
+        let z_far = self.center.1 + 0.50 * self.size.1;
+
+        let P1 = vector3d::Vector3d::new(x_left, y, z_far);
+        let P2 = vector3d::Vector3d::new(x_righ, y, z_far);
+        let P3 = vector3d::Vector3d::new(x_righ, y, z_near);
+        let P4 = vector3d::Vector3d::new(x_left, y, z_near);
+
+        engine::draw_line(projection::ToScreen(P1), projection::ToScreen(P2));
+        engine::draw_line(projection::ToScreen(P2), projection::ToScreen(P3));
+        engine::draw_line(projection::ToScreen(P3), projection::ToScreen(P4));
+        engine::draw_line(projection::ToScreen(P4), projection::ToScreen(P1));
     }
 }
 

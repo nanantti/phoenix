@@ -1,10 +1,12 @@
 mod engine;
 mod map;
+mod player;
 mod projection;
 mod rectangle;
 
 pub struct Game {
     game_map: map::Map,
+    phoenix: player::Player,
 }
 
 impl Game {
@@ -13,11 +15,13 @@ impl Game {
         let z_max = 4000.0;
         Game {
             game_map: map::Map::new(camera_height, z_max, horizon_delta, map_width),
+            phoenix: player::Player::new(-camera_height),
         }
     }
     pub fn update(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {}
     pub fn draw(&self) {
         self.game_map.draw_grid();
+        self.phoenix.draw();
     }
     pub fn check_game_over(&self) -> bool {
         return false;

@@ -10,10 +10,12 @@ pub struct Map {
 
 impl Map {
     pub fn new(camera_height: f32, z_max: f32, horizon_delta: f32, map_width: f32) -> Map {
+        let fov_distance = Self::calculate_fov(camera_height, z_max, horizon_delta);
+        projection::set_fov_distance(fov_distance);
         Map {
             camera_height,
             z_max,
-            fov_distance: Self::calculate_fov(camera_height, z_max, horizon_delta),
+            fov_distance,
             map_width,
         }
     }
@@ -46,19 +48,13 @@ impl Map {
     fn draw_vertical_line(&self, x: f32, camera_height: f32, draw_distance: f32) {
         let bottom = vector3d::Vector3d::new(x, -camera_height, 0.0);
         let top = vector3d::Vector3d::new(x, -camera_height, draw_distance);
-        engine::draw_line(
-            projection::ToScreen(bottom, self.fov_distance),
-            projection::ToScreen(top, self.fov_distance),
-        );
+        engine::draw_line(projection::ToScreen(bottom), projection::ToScreen(top));
     }
 
     fn draw_horizontal_line(&self, z: f32, camera_height: f32) {
         let x = 0.50 * self.map_width;
         let left = vector3d::Vector3d::new(x, -camera_height, z);
         let right = vector3d::Vector3d::new(-x, -camera_height, z);
-        engine::draw_line(
-            projection::ToScreen(left, self.fov_distance),
-            projection::ToScreen(right, self.fov_distance),
-        );
+        engine::draw_line(projection::ToScreen(left), projection::ToScreen(right));
     }
 }
