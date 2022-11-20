@@ -21,12 +21,13 @@ impl Map {
     }
 
     pub fn draw_grid(&self) {
-        let tile_size = 40.0;
+        let n_tiles_size_to_side = 14;
+        let tile_size = self.map_width / (n_tiles_size_to_side as f32);
         let draw_distance = self.z_max;
         let camera_height = self.camera_height;
 
         let mut x = 0.0;
-        while x < self.map_width * 0.50 {
+        while x <= self.map_width * 0.50 {
             self.draw_vertical_line(x, camera_height, draw_distance);
             self.draw_vertical_line(-x, camera_height, draw_distance);
             x += tile_size;
