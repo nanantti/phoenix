@@ -37,24 +37,24 @@ impl Rectangle {
         return [p1, p2, p3, p4];
     }
 
-    pub fn draw(&self, y: f32, fov_distance: f32) {
+    pub fn draw(&self, y: f32, projection: &projection::Projection) {
         let corners = self.get_corners(y);
 
         engine::draw_line(
-            projection::to_screen(corners[0], fov_distance),
-            projection::to_screen(corners[1], fov_distance),
+            projection.to_screen(corners[0]),
+            projection.to_screen(corners[1]),
         );
         engine::draw_line(
-            projection::to_screen(corners[1], fov_distance),
-            projection::to_screen(corners[2], fov_distance),
+            projection.to_screen(corners[1]),
+            projection.to_screen(corners[2]),
         );
         engine::draw_line(
-            projection::to_screen(corners[2], fov_distance),
-            projection::to_screen(corners[3], fov_distance),
+            projection.to_screen(corners[2]),
+            projection.to_screen(corners[3]),
         );
         engine::draw_line(
-            projection::to_screen(corners[3], fov_distance),
-            projection::to_screen(corners[0], fov_distance),
+            projection.to_screen(corners[3]),
+            projection.to_screen(corners[0]),
         );
     }
 }

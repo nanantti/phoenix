@@ -15,20 +15,20 @@ impl Obstacle {
         }
     }
 
-    pub fn draw(&self, fov_distance: f32, y_level: f32) {
+    pub fn draw(&self, projection: &projection::Projection, y_level: f32) {
         let y_low = y_level;
         let y_high = y_level + self.height;
 
-        self.base.draw(y_low, fov_distance);
-        self.base.draw(y_high, fov_distance);
+        self.base.draw(y_low, projection);
+        self.base.draw(y_high, projection);
 
         let corners_low = self.base.get_corners(y_low);
         let corners_high = self.base.get_corners(y_high);
 
         for i in 0..4 {
             engine::draw_line(
-                projection::to_screen(corners_low[i], fov_distance),
-                projection::to_screen(corners_high[i], fov_distance),
+                projection.to_screen(corners_low[i]),
+                projection.to_screen(corners_high[i]),
             );
         }
     }

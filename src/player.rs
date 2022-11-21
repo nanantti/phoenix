@@ -1,3 +1,4 @@
+use super::projection;
 use super::rectangle;
 
 const PLAYER_WIDTH: f32 = 100.0;
@@ -22,9 +23,11 @@ impl Player {
         self.y
     }
 
-    pub fn draw(&self, fov_distance: f32) {
-        self.shape.draw(self.get_y(), fov_distance);
-        self.shape.draw(self.get_y() - FLOAT_HEIGHT, fov_distance);
+    pub fn draw(&self, projection: &projection::Projection) {
+        let zero_projection = projection::Projection::make_zero_projection(projection); // Verbose, aren't we?
+        self.shape.draw(self.get_y(), &zero_projection);
+        self.shape
+            .draw(self.get_y() - FLOAT_HEIGHT, &zero_projection);
     }
 }
 
