@@ -22,7 +22,9 @@ impl Game {
         }
     }
     pub fn update(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {
-        self.projection.set_offset(150.0, 0.0);
+        self.phoenix.update(current_time, active_keys);
+        let player_pos = self.phoenix.get_position();
+        self.projection.set_offset(player_pos.0, player_pos.1);
     }
     pub fn draw(&self) {
         self.game_map.draw(&self.projection);

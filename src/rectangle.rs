@@ -57,6 +57,14 @@ impl Rectangle {
             projection.to_screen(corners[0]),
         );
     }
+
+    pub fn get_center(&self) -> (f32, f32) {
+        self.center
+    }
+
+    pub fn move_x(&mut self, delta_x: f32) {
+        self.center.0 += delta_x;
+    }
 }
 
 #[cfg(test)]
@@ -89,5 +97,20 @@ mod tests {
         let rec1 = Rectangle::new((0.0, 0.0), (1.0, 1.0));
         let rec2 = Rectangle::new((0.0, 3.0), (1.0, 1.0));
         assert_eq! { rec1.collision(&rec2), false }
+    }
+
+    #[test]
+    fn move_center_x() {
+        let mut rec1 = Rectangle::new((0.0, 0.0), (1.0, 1.0));
+        rec1.move_x(10.0);
+        assert_eq! { rec1.get_center(), (10.0, 0.0) }
+    }
+
+    #[test]
+    fn move_center_x_neg() {
+        let mut rec1 = Rectangle::new((0.0, 0.0), (1.0, 1.0));
+        assert_eq! { rec1.get_center(), (0.0, 0.0) }
+        rec1.move_x(-20.0);
+        assert_eq! { rec1.get_center(), (-20.0, 0.0) }
     }
 }

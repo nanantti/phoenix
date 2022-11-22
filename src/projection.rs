@@ -33,10 +33,10 @@ impl Projection {
         self.fov_distance
     }
 
-    pub fn make_zero_projection(base: &Projection) -> Projection {
+    pub fn make_reverse_projection(base: &Projection, offset: (f32, f32)) -> Projection {
         Projection {
             fov_distance: base.get_fov(),
-            offset_x: 0.0,
+            offset_x: offset.0,
             offset_z: 0.0,
         }
     }
