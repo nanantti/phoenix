@@ -7,11 +7,17 @@ const PLAYER_DEPTH: f32 = 10.0;
 const PLAYER_Z: f32 = 25.0;
 const FLOAT_HEIGHT: f32 = 25.0;
 const FRAME_UPDATE_SECONDS: f64 = 1.0 / 50.0;
+const INITAL_FWD_SPEED: f32 = 200.0;
+const INITAL_SIDE_SPEED: f32 = 200.0;
+const FWD_ACELERATION: f32 = 400.0;
+const MIN_SPEED: f32 = 100.0;
+const MAX_SPEED: f32 = 1000.0;
 
 pub struct Player {
     shape: rectangle::Rectangle,
     y: f32,
     last_update_time: f64,
+    fwd_speed: f32,
 }
 
 impl Player {
@@ -20,6 +26,7 @@ impl Player {
             shape: rectangle::Rectangle::new((0.0, PLAYER_Z), (PLAYER_WIDTH, PLAYER_DEPTH)),
             y: map_y + FLOAT_HEIGHT,
             last_update_time: 0.0,
+            fwd_speed: INITAL_FWD_SPEED,
         }
     }
 
@@ -41,28 +48,49 @@ impl Player {
         if self.skip_frame(current_time) {
             return;
         }
-        self.update_size_position(active_keys);
-        self.update_forward_position(active_keys);
+        let delta_t = self.time_since_last_update(current_time);
+        self.update_fwd_speed(active_keys, delta_t);
+        self.update_size_position(active_keys, delta_t);
+        self.update_forward_position(active_keys, delta_t);
+        self.last_update_time = current_time;
     }
 
-    fn update_size_position(&mut self, active_keys: &engine::MoveKeys) {
-        let move_dist_per_frame_side = 10.0;
+    fn update_fwd_speed(&mut self, active_keys: &engine::MoveKeys, delta_t: f32) {
+        let delta_v = delta_t * FWD_ACELERATION;
+        if active_keys.up {
+            self.fwd_speed += delta_v;
+        }
+        if active_keys.down {
+            self.fwd_speed -= delta_v;
+        }
+        if self.fwd_speed < MIN_SPEED {
+            self.fwd_speed = MIN_SPEED;
+        }
+        if self.fwd_speed > MAX_SPEED {
+            self.fwd_speed = MAX_SPEED;
+        }
+    }
+
+    fn update_size_position(&mut self, active_keys: &engine::MoveKeys, delta_t: f32) {
+        let move_dist = delta_t * INITAL_SIDE_SPEED;
         if active_keys.left && !active_keys.right {
-            self.shape.move_x(-move_dist_per_frame_side);
+            self.shape.move_x(-move_dist);
         }
         if !active_keys.left && active_keys.right {
-            self.shape.move_x(move_dist_per_frame_side);
+            self.shape.move_x(move_dist);
         }
     }
 
-    fn update_forward_position(&mut self, active_keys: &engine::MoveKeys) {
-        let move_dist_per_frame_forwards = 10.0;
-        self.shape.move_y(move_dist_per_frame_forwards);
+    fn time_since_last_update(&self, current_time: f64) -> f32 {
+        (current_time - self.last_update_time) as f32
+    }
+
+    fn update_forward_position(&mut self, active_keys: &engine::MoveKeys, delta_t: f32) {
+        self.shape.move_y(self.fwd_speed * delta_t);
     }
 
     fn skip_frame(&mut self, current_time: f64) -> bool {
         if current_time - self.last_update_time >= FRAME_UPDATE_SECONDS {
-            self.last_update_time = current_time;
             return false;
         }
         return true;
@@ -108,6 +136,13 @@ mod tests {
     const UP_PRESS: engine::MoveKeys = engine::MoveKeys {
         up: true,
         down: false,
+        left: false,
+        right: false,
+    };
+
+    const DOWN_PRESS: engine::MoveKeys = engine::MoveKeys {
+        up: false,
+        down: true,
         left: false,
         right: false,
     };
@@ -177,5 +212,24 @@ mod tests {
         player.update(NEXT_FRAME, &UP_PRESS);
         let player_pos = player.get_position();
         assert! {player_pos.1 > PLAYER_Z}
+    }
+
+    #[test]
+    fn player_moves_forward_with_inital_speed() {
+        let mut player = Player::new(0.0);
+        player.update(NEXT_FRAME, &NO_PRESS);
+        let player_pos = player.get_position();
+        let new_z = PLAYER_Z + INITAL_FWD_SPEED * (NEXT_FRAME as f32);
+        assert_eq! {player_pos.1, new_z}
+    }
+
+    #[test]
+    fn player_accelerates_on_up_press() {
+        let mut player = Player::new(0.0);
+        player.update(NEXT_FRAME, &UP_PRESS);
+        let player_pos = player.get_position();
+        let new_z = PLAYER_Z + INITAL_FWD_SPEED * (NEXT_FRAME as f32);
+        // new_z is the position if no acceleration was present
+        assert! {player_pos.1 > new_z}
     }
 }
