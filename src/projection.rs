@@ -46,9 +46,15 @@ impl Projection {
 
     pub fn is_point_in_view_zone(&self, point_xz: &(f32, f32)) -> bool {
         self.is_z_in_range(point_xz.1)
+        // Optional: add x detection
+    }
+
+    pub fn get_view_zone_z_range(&self) -> (f32, f32) {
+        (self.offset_z, self.offset_z + self.draw_distance)
     }
 
     fn is_z_in_range(&self, z: f32) -> bool {
-        (self.offset_z <= z) && (z <= self.offset_z + self.draw_distance)
+        let range = self.get_view_zone_z_range();
+        (range.0 <= z) && (z <= range.1)
     }
 }

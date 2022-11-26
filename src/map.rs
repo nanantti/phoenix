@@ -20,6 +20,7 @@ impl Map {
     pub fn draw(&self, projection: &projection::Projection) {
         self.draw_grid(projection);
         self.obstacle.draw(projection, -self.camera_height);
+        self.draw_map_limits(projection);
     }
 
     pub fn draw_grid(&self, projection: &projection::Projection) {
@@ -28,9 +29,9 @@ impl Map {
     }
 
     fn draw_vertical_line(&self, x: f32, projection: &projection::Projection) {
-        let top_z: f32 = 0.0;
-        let bottom = vector3d::Vector3d::new(x, -self.camera_height, 0.0);
-        let top = vector3d::Vector3d::new(x, -self.camera_height, top_z);
+        let z_limits = projection.get_view_zone_z_range();
+        let bottom = vector3d::Vector3d::new(x, -self.camera_height, z_limits.0);
+        let top = vector3d::Vector3d::new(x, -self.camera_height, z_limits.1);
         engine::draw_line(projection.to_screen(bottom), projection.to_screen(top));
     }
 
@@ -39,5 +40,11 @@ impl Map {
         let left = vector3d::Vector3d::new(x, -self.camera_height, z);
         let right = vector3d::Vector3d::new(-x, -self.camera_height, z);
         engine::draw_line(projection.to_screen(left), projection.to_screen(right));
+    }
+
+    fn draw_map_limits(&self, projection: &projection::Projection) {
+        let x_limit = 0.50 * self.map_width;
+        self.draw_vertical_line(x_limit, projection);
+        self.draw_vertical_line(-x_limit, projection);
     }
 }
