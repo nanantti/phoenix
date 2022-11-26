@@ -9,6 +9,7 @@ pub struct Map {
 }
 
 impl Map {
+    const FENCE_WIDTH_PX: f32 = 40.0;
     pub fn new(camera_height: f32, map_width: f32) -> Map {
         Map {
             camera_height,
@@ -20,7 +21,7 @@ impl Map {
     pub fn draw(&self, projection: &projection::Projection) {
         self.draw_grid(projection);
         self.obstacle.draw(projection, -self.camera_height);
-        self.draw_map_limits(projection);
+        self.draw_map_fence(projection);
     }
 
     pub fn draw_grid(&self, projection: &projection::Projection) {
@@ -42,9 +43,12 @@ impl Map {
         engine::draw_line(projection.to_screen(left), projection.to_screen(right));
     }
 
-    fn draw_map_limits(&self, projection: &projection::Projection) {
+    fn draw_map_fence(&self, projection: &projection::Projection) {
         let x_limit = 0.50 * self.map_width;
+        let x_limit_outer = x_limit + Map::FENCE_WIDTH_PX;
         self.draw_vertical_line(x_limit, projection);
         self.draw_vertical_line(-x_limit, projection);
+        self.draw_vertical_line(x_limit_outer, projection);
+        self.draw_vertical_line(-x_limit_outer, projection);
     }
 }
