@@ -16,6 +16,10 @@ impl Obstacle {
     }
 
     pub fn draw(&self, projection: &projection::Projection, y_level: f32) {
+        if !projection.is_point_in_view_zone(self.base.get_center()) {
+            return;
+        }
+
         let y_low = y_level;
         let y_high = y_level + self.height;
 

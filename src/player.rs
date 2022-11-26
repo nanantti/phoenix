@@ -28,7 +28,10 @@ impl Player {
     }
 
     pub fn draw(&self, projection: &projection::Projection) {
-        let compensated_projection = projection::Projection::make_compensated_projection(projection, self.shape.get_center());
+        let compensated_projection = projection::Projection::make_compensated_projection(
+            projection,
+            self.shape.get_center(),
+        );
         self.shape.draw(self.get_y(), &compensated_projection);
         self.shape
             .draw(self.get_y() - FLOAT_HEIGHT, &compensated_projection);
@@ -36,7 +39,7 @@ impl Player {
 
     pub fn update(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {
         if self.skip_frame(current_time) {
-            return
+            return;
         }
         self.update_size_position(active_keys);
         self.update_forward_position(active_keys);

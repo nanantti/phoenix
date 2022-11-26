@@ -2,6 +2,7 @@ pub struct Projection {
     fov_distance: f32,
     offset_x: f32,
     offset_z: f32,
+    draw_distance: f32,
 }
 
 impl Projection {
@@ -12,6 +13,7 @@ impl Projection {
             fov_distance,
             offset_x: 0.0,
             offset_z: 0.0,
+            draw_distance: z_max,
         }
     }
 
@@ -38,6 +40,15 @@ impl Projection {
             fov_distance: base.get_fov(),
             offset_x: offset.0,
             offset_z: offset.1,
+            draw_distance: base.draw_distance,
         }
+    }
+
+    pub fn is_point_in_view_zone(&self, point_xz: (f32, f32)) -> bool {
+        self.is_z_in_range(point_xz.1)
+    }
+
+    fn is_z_in_range(&self, z: f32) -> bool {
+        (self.offset_z <= z) && (z <= self.offset_z + self.draw_distance)
     }
 }

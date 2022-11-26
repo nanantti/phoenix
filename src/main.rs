@@ -16,7 +16,7 @@ impl Game {
         let horizon_delta = 10.0;
         let z_max = 4000.0;
         Game {
-            game_map: map::Map::new(camera_height, z_max, map_width),
+            game_map: map::Map::new(camera_height, map_width),
             phoenix: player::Player::new(-camera_height),
             projection: projection::Projection::new(camera_height, z_max, horizon_delta),
         }
