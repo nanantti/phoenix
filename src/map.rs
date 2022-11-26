@@ -27,6 +27,33 @@ impl Map {
     pub fn draw_grid(&self, projection: &projection::Projection) {
         let n_tiles_size_to_side = 8;
         let tile_size = self.map_width / (n_tiles_size_to_side as f32);
+        self.draw_vertical_grid_lines(tile_size, projection);
+        self.draw_horizontal_grid_lines(tile_size, projection);
+    }
+
+    fn draw_vertical_grid_lines(&self, tile_size: f32, projection: &projection::Projection) {
+        let mut x = 0.0;
+        while x < self.map_width * 0.50 {
+            self.draw_vertical_line(x, projection);
+            self.draw_vertical_line(-x, projection);
+            x += tile_size;
+        }
+    }
+
+    fn draw_horizontal_grid_lines(&self, tile_size: f32, projection: &projection::Projection) {
+        let range = projection.get_view_zone_z_range();
+        let z_offset = self.z_grid_offset(tile_size, projection);
+        let mut z = range.0;
+        while z < range.1 {
+            self.draw_horizontal_line(z - z_offset, projection);
+            z += tile_size;
+        }
+    }
+
+    fn z_grid_offset(&self, tile_size: f32, projection: &projection::Projection) -> f32 {
+        let viewport_anchor = projection.get_view_zone_z_range().0;
+        let anchor_grid_displacement = ((viewport_anchor as i32) % (tile_size as i32)) as f32;
+        anchor_grid_displacement
     }
 
     fn draw_vertical_line(&self, x: f32, projection: &projection::Projection) {
