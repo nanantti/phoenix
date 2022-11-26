@@ -44,7 +44,7 @@ impl Projection {
         }
     }
 
-    pub fn is_point_in_view_zone(&self, point_xz: (f32, f32)) -> bool {
+    pub fn is_point_in_view_zone(&self, point_xz: &(f32, f32)) -> bool {
         self.is_z_in_range(point_xz.1)
     }
 

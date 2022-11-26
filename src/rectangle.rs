@@ -37,6 +37,15 @@ impl Rectangle {
         return [p1, p2, p3, p4];
     }
 
+    fn get_corners_xz(&self) -> [(f32, f32); 4] {
+        let corners = self.get_corners(0.0);
+        let p1 = (corners[0].x, corners[0].z);
+        let p2 = (corners[1].x, corners[1].z);
+        let p3 = (corners[2].x, corners[2].z);
+        let p4 = (corners[3].x, corners[3].z);
+        return [p1, p2, p3, p4];
+    }
+
     pub fn draw(&self, y: f32, projection: &projection::Projection) {
         let corners = self.get_corners(y);
 
@@ -68,6 +77,16 @@ impl Rectangle {
 
     pub fn move_y(&mut self, delta_y: f32) {
         self.center.1 += delta_y;
+    }
+
+    pub fn is_rectangle_in_view_range(&self, projection: &projection::Projection) -> bool {
+        let mut in_view: bool = false;
+        for corner in self.get_corners_xz() {
+            if projection.is_point_in_view_zone(&corner) {
+                in_view = true;
+            }
+        }
+        in_view
     }
 }
 
