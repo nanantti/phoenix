@@ -37,7 +37,7 @@ impl Projection {
         Projection {
             fov_distance: base.get_fov(),
             offset_x: offset.0,
-            offset_z: 0.0,
+            offset_z: offset.1,
         }
     }
 }

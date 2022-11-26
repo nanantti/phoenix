@@ -65,6 +65,10 @@ impl Rectangle {
     pub fn move_x(&mut self, delta_x: f32) {
         self.center.0 += delta_x;
     }
+
+    pub fn move_y(&mut self, delta_y: f32) {
+        self.center.1 += delta_y;
+    }
 }
 
 #[cfg(test)]
@@ -112,5 +116,20 @@ mod tests {
         assert_eq! { rec1.get_center(), (0.0, 0.0) }
         rec1.move_x(-20.0);
         assert_eq! { rec1.get_center(), (-20.0, 0.0) }
+    }
+
+    #[test]
+    fn move_center_y() {
+        let mut rec1 = Rectangle::new((0.0, 0.0), (1.0, 1.0));
+        rec1.move_y(10.0);
+        assert_eq! { rec1.get_center(), (0.0, 10.0) }
+    }
+
+    #[test]
+    fn move_center_y_neg() {
+        let mut rec1 = Rectangle::new((0.0, 0.0), (1.0, 1.0));
+        assert_eq! { rec1.get_center(), (0.0, 0.0) }
+        rec1.move_y(-20.0);
+        assert_eq! { rec1.get_center(), (0.0, -20.0) }
     }
 }

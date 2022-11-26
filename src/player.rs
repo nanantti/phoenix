@@ -39,6 +39,7 @@ impl Player {
             return
         }
         self.update_size_position(active_keys);
+        self.update_forward_position(active_keys);
     }
 
     fn update_size_position(&mut self, active_keys: &engine::MoveKeys) {
@@ -49,6 +50,11 @@ impl Player {
         if !active_keys.left && active_keys.right {
             self.shape.move_x(move_dist_per_frame_side);
         }
+    }
+
+    fn update_forward_position(&mut self, active_keys: &engine::MoveKeys) {
+        let move_dist_per_frame_forwards = 10.0;
+        self.shape.move_y(move_dist_per_frame_forwards);
     }
 
     fn skip_frame(&mut self, current_time: f64) -> bool {
@@ -94,6 +100,13 @@ mod tests {
         down: false,
         left: true,
         right: true,
+    };
+
+    const UP_PRESS: engine::MoveKeys = engine::MoveKeys {
+        up: true,
+        down: false,
+        left: false,
+        right: false,
     };
 
     const NEXT_FRAME: f64 = FRAME_UPDATE_SECONDS * (1.05 as f64);
@@ -153,5 +166,13 @@ mod tests {
         player.update(NEXT_FRAME, &LEFT_RIGHT_PRESS);
         let player_pos = player.get_position();
         assert! {player_pos.0 == 0.0}
+    }
+
+    #[test]
+    fn player_moves_forward() {
+        let mut player = Player::new(0.0);
+        player.update(NEXT_FRAME, &UP_PRESS);
+        let player_pos = player.get_position();
+        assert! {player_pos.1 > PLAYER_Z}
     }
 }
