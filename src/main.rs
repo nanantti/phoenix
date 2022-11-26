@@ -33,6 +33,9 @@ impl Game {
     pub fn check_game_over(&self) -> bool {
         return false;
     }
+    pub fn add_obstacle(&mut self, obstacle: obstacle::Obstacle) {
+        self.game_map.add_obstacle(obstacle);
+    }
     pub fn reset(&self) {}
 }
 
@@ -42,6 +45,16 @@ async fn main() {
         0.50 * engine::get_screen_height(),
         engine::get_screen_width(),
     );
+    game.add_obstacle(obstacle::Obstacle::new(
+        (200.0, 200.0),
+        (100.0, 100.0),
+        400.0,
+    ));
+    game.add_obstacle(obstacle::Obstacle::new(
+        (-200.0, 600.0),
+        (100.0, 100.0),
+        200.0,
+    ));
     loop {
         engine::clear_background();
         //game.update_screen_size(engine::get_screen_size());

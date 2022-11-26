@@ -5,7 +5,7 @@ use super::projection;
 pub struct Map {
     camera_height: f32,
     map_width: f32,
-    obstacle: obstacle::Obstacle,
+    obstacles: Vec<obstacle::Obstacle>,
 }
 
 impl Map {
@@ -14,13 +14,19 @@ impl Map {
         Map {
             camera_height,
             map_width,
-            obstacle: obstacle::Obstacle::new((200.0, 200.0), (100.0, 100.0), 400.0),
+            obstacles: Vec::new(),
         }
+    }
+
+    pub fn add_obstacle(&mut self, obstacle: obstacle::Obstacle) {
+        self.obstacles.push(obstacle);
     }
 
     pub fn draw(&self, projection: &projection::Projection) {
         self.draw_grid(projection);
-        self.obstacle.draw(projection, -self.camera_height);
+        for obstacle in &self.obstacles {
+            obstacle.draw(projection, -self.camera_height);
+        }
         self.draw_map_fence(projection);
     }
 

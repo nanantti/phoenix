@@ -51,7 +51,7 @@ impl Player {
         let delta_t = self.time_since_last_update(current_time);
         self.update_fwd_speed(active_keys, delta_t);
         self.update_size_position(active_keys, delta_t);
-        self.update_forward_position(active_keys, delta_t);
+        self.update_forward_position(delta_t);
         self.last_update_time = current_time;
     }
 
@@ -85,7 +85,7 @@ impl Player {
         (current_time - self.last_update_time) as f32
     }
 
-    fn update_forward_position(&mut self, active_keys: &engine::MoveKeys, delta_t: f32) {
+    fn update_forward_position(&mut self, delta_t: f32) {
         self.shape.move_y(self.fwd_speed * delta_t);
     }
 
