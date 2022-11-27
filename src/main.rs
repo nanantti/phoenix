@@ -31,7 +31,7 @@ impl Game {
         self.phoenix.draw(&self.projection);
     }
     pub fn check_game_over(&self) -> bool {
-        return false;
+        return self.game_map.check_collision(self.phoenix.get_shape()) ;
     }
     pub fn add_obstacle(&mut self, obstacle: obstacle::Obstacle) {
         self.game_map.add_obstacle(obstacle);

@@ -1,6 +1,7 @@
 use super::engine;
 use super::obstacle;
 use super::projection;
+use super::rectangle;
 
 pub struct Map {
     camera_height: f32,
@@ -20,6 +21,15 @@ impl Map {
 
     pub fn add_obstacle(&mut self, obstacle: obstacle::Obstacle) {
         self.obstacles.push(obstacle);
+    }
+
+    pub fn check_collision(&self, player_shape: &rectangle::Rectangle) -> bool {
+        for obstacle in &self.obstacles {
+            if obstacle.check_collision(player_shape) {
+                return true
+            }
+        }
+        false
     }
 
     pub fn draw(&self, projection: &projection::Projection) {

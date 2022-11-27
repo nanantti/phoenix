@@ -99,6 +99,10 @@ impl Player {
     pub fn get_position(&self) -> (f32, f32) {
         self.shape.get_center()
     }
+
+    pub fn get_shape(&self) -> &rectangle::Rectangle {
+        &self.shape
+    }
 }
 
 #[cfg(test)]

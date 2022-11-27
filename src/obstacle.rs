@@ -36,4 +36,8 @@ impl Obstacle {
             );
         }
     }
+
+    pub fn check_collision(&self, other: &rectangle::Rectangle) -> bool {
+        self.base.collision(other)
+    }
 }
