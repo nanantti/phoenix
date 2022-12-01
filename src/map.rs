@@ -26,7 +26,7 @@ impl Map {
     pub fn check_collision(&self, player_shape: &rectangle::Rectangle) -> bool {
         for obstacle in &self.obstacles {
             if obstacle.check_collision(player_shape) {
-                return true
+                return true;
             }
         }
         false

@@ -9,6 +9,7 @@ pub struct Game {
     game_map: map::Map,
     phoenix: player::Player,
     projection: projection::Projection,
+    last_reset_timeframe: f64,
 }
 
 impl Game {
@@ -19,10 +20,12 @@ impl Game {
             game_map: map::Map::new(camera_height, map_width),
             phoenix: player::Player::new(-camera_height),
             projection: projection::Projection::new(camera_height, z_max, horizon_delta),
+            last_reset_timeframe: 0.0,
         }
     }
     pub fn update(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {
-        self.phoenix.update(current_time, active_keys);
+        self.phoenix
+            .update(current_time - self.last_reset_timeframe, active_keys);
         let player_pos = self.phoenix.get_position();
         self.projection.set_offset(player_pos.0, player_pos.1);
     }
@@ -31,16 +34,17 @@ impl Game {
         self.phoenix.draw(&self.projection);
     }
     pub fn check_game_over(&self) -> bool {
-        return self.game_map.check_collision(self.phoenix.get_shape()) ;
+        return self.game_map.check_collision(self.phoenix.get_shape());
     }
     pub fn add_obstacle(&mut self, obstacle: obstacle::Obstacle) {
         self.game_map.add_obstacle(obstacle);
     }
-    pub fn reset(&self) {}
+    pub fn reset(&mut self, time: f64) {
+        self.last_reset_timeframe = time;
+    }
 }
 
-#[macroquad::main("Phoenix")]
-async fn main() {
+fn foobar() -> Game {
     let mut game = Game::new(
         0.50 * engine::get_screen_height(),
         engine::get_screen_width(),
@@ -55,13 +59,20 @@ async fn main() {
         (100.0, 100.0),
         200.0,
     ));
+    game.reset(engine::get_time());
+    game
+}
+
+#[macroquad::main("Phoenix")]
+async fn main() {
+    let mut game = foobar();
     loop {
         engine::clear_background();
         //game.update_screen_size(engine::get_screen_size());
         game.update(engine::get_time(), &engine::get_active_move_keys());
         game.draw();
         if game.check_game_over() {
-            game.reset();
+            game = foobar();
         }
         engine::await_next_frame().await
     }
