@@ -6,14 +6,16 @@ pub struct Projection {
 }
 
 impl Projection {
-    pub fn new(camera_height: f32, z_max: f32, horizon_delta: f32) -> Projection {
-        let horizon_drop: f32 = horizon_delta / camera_height;
-        let fov_distance = z_max / (1.0 + 1.0 / horizon_drop);
+    const HORIZON_DELTA: f32 = 10.0;
+    const Z_MAX: f32 = 4000.0;
+    pub fn new(camera_height: f32) -> Projection {
+        let horizon_drop: f32 = Projection::HORIZON_DELTA / camera_height;
+        let fov_distance = Projection::Z_MAX / (1.0 + 1.0 / horizon_drop);
         Projection {
             fov_distance,
             offset_x: 0.0,
             offset_z: 0.0,
-            draw_distance: z_max,
+            draw_distance: Projection::Z_MAX,
         }
     }
 

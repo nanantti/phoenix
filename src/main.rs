@@ -10,17 +10,19 @@ pub struct Game {
     phoenix: player::Player,
     projection: projection::Projection,
     last_reset_timeframe: f64,
+    camera_height: f32,
+    map_width: f32,
 }
 
 impl Game {
     pub fn new(camera_height: f32, map_width: f32) -> Game {
-        let horizon_delta = 10.0;
-        let z_max = 4000.0;
         Game {
             game_map: map::Map::new(camera_height, map_width),
             phoenix: player::Player::new(-camera_height),
-            projection: projection::Projection::new(camera_height, z_max, horizon_delta),
+            projection: projection::Projection::new(camera_height),
             last_reset_timeframe: 0.0,
+            camera_height,
+            map_width,
         }
     }
     pub fn update(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {
@@ -40,6 +42,8 @@ impl Game {
         self.game_map.add_obstacle(obstacle);
     }
     pub fn reset(&mut self, time: f64) {
+        self.phoenix = player::Player::new(-self.camera_height);
+        self.projection = projection::Projection::new(self.camera_height);
         self.last_reset_timeframe = time;
     }
 }
@@ -59,7 +63,6 @@ fn foobar() -> Game {
         (100.0, 100.0),
         200.0,
     ));
-    game.reset(engine::get_time());
     game
 }
 
@@ -72,7 +75,7 @@ async fn main() {
         game.update(engine::get_time(), &engine::get_active_move_keys());
         game.draw();
         if game.check_game_over() {
-            game = foobar();
+            game.reset(engine::get_time());
         }
         engine::await_next_frame().await
     }
