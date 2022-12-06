@@ -6,10 +6,10 @@ const PLAYER_DEPTH: f32 = 10.0;
 const PLAYER_Z: f32 = 25.0;
 const FLOAT_HEIGHT: f32 = 25.0;
 const FRAME_UPDATE_SECONDS: f64 = 1.0 / 50.0;
-const INITAL_FWD_SPEED: f32 = 200.0;
+const INITAL_FWD_SPEED: f32 = 400.0;
 const INITAL_SIDE_SPEED: f32 = 200.0;
 const FWD_ACELERATION: f32 = 400.0;
-const MIN_SPEED: f32 = 100.0;
+const MIN_SPEED: f32 = 200.0;
 const MAX_SPEED: f32 = 1000.0;
 
 pub struct Player {
@@ -27,6 +27,10 @@ impl Player {
             last_update_time: 0.0,
             fwd_speed: INITAL_FWD_SPEED,
         }
+    }
+
+    pub fn get_speed_pu(&self) -> f32 {
+        (self.fwd_speed - MIN_SPEED) / (MAX_SPEED - MIN_SPEED)
     }
 
     pub fn get_y(&self) -> f32 {

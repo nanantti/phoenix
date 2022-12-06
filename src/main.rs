@@ -32,6 +32,8 @@ impl Game {
             .update(current_time - self.last_reset_timeframe, active_keys);
         let player_pos = self.phoenix.get_position();
         self.projection.set_offset(player_pos.0, player_pos.1);
+        let player_speed = self.phoenix.get_speed_pu();
+        self.projection.set_fov(player_speed);
     }
     pub fn draw(&self) {
         self.game_map.draw(&self.projection);
@@ -53,7 +55,7 @@ impl Game {
 fn foobar() -> Game {
     let camera_drop: f32 = 0.50 * engine::get_screen_height();
     let map_width: f32 = 1.0 * engine::get_screen_width();
-    let map_length: f32 = 2.0 * engine::get_screen_width();
+    let map_length: f32 = 6.0 * engine::get_screen_width();
     let mut game = Game::new(camera_drop, map_width, map_length);
     game
 }

@@ -6,6 +6,8 @@ pub struct Projection {
 }
 
 impl Projection {
+    const FOV_MAX: f32 = 101.0;
+    const FOV_MIN: f32 = 400.0;
     const HORIZON_DELTA: f32 = 10.0;
     const Z_MAX: f32 = 4000.0;
     pub fn new(camera_height: f32) -> Projection {
@@ -35,6 +37,10 @@ impl Projection {
 
     pub fn get_fov(&self) -> f32 {
         self.fov_distance
+    }
+
+    pub fn set_fov(&mut self, fov_pu: f32) {
+        self.fov_distance = Projection::FOV_MIN + (fov_pu) * (Projection::FOV_MAX - Projection::FOV_MIN);
     }
 
     pub fn make_compensated_projection(base: &Projection, offset: (f32, f32)) -> Projection {
