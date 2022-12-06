@@ -12,13 +12,21 @@ pub struct Map {
 
 impl Map {
     const FENCE_WIDTH_PX: f32 = 40.0;
+    const ENDGOAL_DEPTH_PX: f32 = 100.0;
     pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Map {
-        Map {
+        let mut map = Map {
             camera_height,
             map_width,
             map_length,
             obstacles: Vec::new(),
-        }
+        };
+
+        map.add_obstacle(obstacle::Obstacle::new(
+            (0.0, map_length + 0.50 * Map::ENDGOAL_DEPTH_PX),
+            (map_width + 2.0 * Map::FENCE_WIDTH_PX, Map::ENDGOAL_DEPTH_PX),
+            100.0,
+        ));
+        map
     }
 
     pub fn add_obstacle(&mut self, obstacle: obstacle::Obstacle) {

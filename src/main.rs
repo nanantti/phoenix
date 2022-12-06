@@ -54,12 +54,6 @@ fn foobar() -> Game {
     let map_length: f32 = map_width * 2.0;
     let mut game = Game::new(camera_drop, map_width, map_length);
 
-    let endgoal_depth: f32 = 100.0;
-    game.add_obstacle(obstacle::Obstacle::new(
-        (0.0, map_length + 0.50 * endgoal_depth),
-        (map_width, endgoal_depth),
-        100.0,
-    ));
     game.add_obstacle(obstacle::Obstacle::new(
         (200.0, 200.0),
         (100.0, 100.0),
