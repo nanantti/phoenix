@@ -13,8 +13,10 @@ pub struct Map {
 
 impl Map {
     const FENCE_WIDTH_PX: f32 = 40.0;
+    const FENCE_HEIGHT_PX: f32 = 100.0;
     const ENDGOAL_DEPTH_PX: f32 = 100.0;
     const N_TILES_SIDE_TO_SIDE: f32 = 8.0;
+
     pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Map {
         let tile_size = map_width / Map::N_TILES_SIDE_TO_SIDE;
         let mut map = Map {
@@ -25,13 +27,19 @@ impl Map {
             tile_size,
         };
         map.add_fences();
-
-        map.add_obstacle(obstacle::Obstacle::new(
-            (0.0, map_length + 0.50 * Map::ENDGOAL_DEPTH_PX),
-            (map_width + 2.0 * Map::FENCE_WIDTH_PX, Map::ENDGOAL_DEPTH_PX),
-            100.0,
-        ));
+        map.add_endgoal();
         map
+    }
+
+    fn add_endgoal(&mut self) {
+        self.add_obstacle(obstacle::Obstacle::new(
+            (0.0, self.map_length + 0.50 * Map::ENDGOAL_DEPTH_PX),
+            (
+                self.map_width + 2.0 * Map::FENCE_WIDTH_PX,
+                Map::ENDGOAL_DEPTH_PX,
+            ),
+            Map::FENCE_HEIGHT_PX,
+        ));
     }
 
     fn add_fences(&mut self) {
@@ -46,7 +54,7 @@ impl Map {
             self.add_obstacle(obstacle::Obstacle::new(
                 (x, z),
                 (Map::FENCE_WIDTH_PX, self.tile_size),
-                100.0,
+                Map::FENCE_HEIGHT_PX,
             ));
             z += self.tile_size;
         }
