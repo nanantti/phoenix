@@ -8,30 +8,23 @@ pub struct Map {
     map_width: f32,
     map_length: f32,
     obstacles: Vec<obstacle::Obstacle>,
+    tile_size: f32,
 }
 
 impl Map {
     const FENCE_WIDTH_PX: f32 = 40.0;
     const ENDGOAL_DEPTH_PX: f32 = 100.0;
+    const N_TILES_SIDE_TO_SIDE: f32 = 8.0;
     pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Map {
+        let tile_size = map_width / Map::N_TILES_SIDE_TO_SIDE;
         let mut map = Map {
             camera_height,
             map_width,
             map_length,
             obstacles: Vec::new(),
+            tile_size,
         };
-
-        map.add_obstacle(obstacle::Obstacle::new(
-            ((map_width + Map::FENCE_WIDTH_PX) * 0.50, map_length * 0.50 ),
-            (Map::FENCE_WIDTH_PX, map_length),
-            100.0,
-        ));
-
-        map.add_obstacle(obstacle::Obstacle::new(
-            (-(map_width + Map::FENCE_WIDTH_PX) * 0.50, map_length * 0.50 ),
-            (Map::FENCE_WIDTH_PX, map_length),
-            100.0,
-        ));
+        map.add_fences();
 
         map.add_obstacle(obstacle::Obstacle::new(
             (0.0, map_length + 0.50 * Map::ENDGOAL_DEPTH_PX),
@@ -39,6 +32,24 @@ impl Map {
             100.0,
         ));
         map
+    }
+
+    fn add_fences(&mut self) {
+        let x_fence = (self.map_width + Map::FENCE_WIDTH_PX) * 0.50;
+        self.add_fence(x_fence);
+        self.add_fence(-x_fence);
+    }
+
+    fn add_fence(&mut self, x: f32) {
+        let mut z: f32 = self.tile_size * 0.50;
+        while z < self.map_length {
+            self.add_obstacle(obstacle::Obstacle::new(
+                (x, z),
+                (Map::FENCE_WIDTH_PX, self.tile_size),
+                100.0,
+            ));
+            z += self.tile_size;
+        }
     }
 
     pub fn add_obstacle(&mut self, obstacle: obstacle::Obstacle) {
@@ -59,14 +70,11 @@ impl Map {
         for obstacle in &self.obstacles {
             obstacle.draw(projection, -self.camera_height);
         }
-        //self.draw_map_fence(projection);
     }
 
     pub fn draw_grid(&self, projection: &projection::Projection) {
-        let n_tiles_size_to_side = 8;
-        let tile_size = self.map_width / (n_tiles_size_to_side as f32);
-        self.draw_vertical_grid_lines(tile_size, projection);
-        self.draw_horizontal_grid_lines(tile_size, projection);
+        self.draw_vertical_grid_lines(self.tile_size, projection);
+        self.draw_horizontal_grid_lines(self.tile_size, projection);
     }
 
     fn draw_vertical_grid_lines(&self, tile_size: f32, projection: &projection::Projection) {
@@ -108,14 +116,5 @@ impl Map {
         let left = vector3d::Vector3d::new(x, -self.camera_height, z);
         let right = vector3d::Vector3d::new(-x, -self.camera_height, z);
         engine::draw_line(projection.to_screen(left), projection.to_screen(right));
-    }
-
-    fn draw_map_fence(&self, projection: &projection::Projection) {
-        let x_limit = 0.50 * self.map_width;
-        let x_limit_outer = x_limit + Map::FENCE_WIDTH_PX;
-        self.draw_vertical_line(x_limit, projection);
-        self.draw_vertical_line(-x_limit, projection);
-        self.draw_vertical_line(x_limit_outer, projection);
-        self.draw_vertical_line(-x_limit_outer, projection);
     }
 }
