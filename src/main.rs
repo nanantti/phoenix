@@ -52,20 +52,9 @@ impl Game {
 
 fn foobar() -> Game {
     let camera_drop: f32 = 0.50 * engine::get_screen_height();
-    let map_width: f32 = engine::get_screen_width();
-    let map_length: f32 = map_width * 2.0;
+    let map_width: f32 = 1.0 * engine::get_screen_width();
+    let map_length: f32 = 2.0 * engine::get_screen_width();
     let mut game = Game::new(camera_drop, map_width, map_length);
-
-    game.add_obstacle(obstacle::Obstacle::new(
-        (200.0, 200.0),
-        (100.0, 100.0),
-        400.0,
-    ));
-    game.add_obstacle(obstacle::Obstacle::new(
-        (-200.0, 600.0),
-        (100.0, 100.0),
-        200.0,
-    ));
     game
 }
 

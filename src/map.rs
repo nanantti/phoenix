@@ -27,6 +27,7 @@ impl Map {
         };
         map.add_fences();
         map.add_endgoal();
+        map.roll_map(20);
         map
     }
 
@@ -66,6 +67,15 @@ impl Map {
     pub fn check_collision(&self, player_shape: &rectangle::Rectangle) -> bool {
         for obstacle in &self.obstacles {
             if obstacle.check_collision(player_shape) {
+                return true;
+            }
+        }
+        false
+    }
+
+    pub fn check_collision_obst(&self, other: &obstacle::Obstacle) -> bool {
+        for obstacle in &self.obstacles {
+            if obstacle.check_collision_obst(other) {
                 return true;
             }
         }
@@ -123,5 +133,31 @@ impl Map {
         let left = vector3d::Vector3d::new(x, -self.camera_height, z);
         let right = vector3d::Vector3d::new(-x, -self.camera_height, z);
         engine::draw_line(projection.to_screen(left), projection.to_screen(right));
+    }
+
+    fn roll_map(&mut self, n_tries: i32) {
+        for _ in 0..n_tries {
+            let random_obstacle = self.roll_random_obstacle();
+            if !self.check_collision_obst(&random_obstacle) {
+                self.add_obstacle(random_obstacle);
+            }
+        }
+    }
+
+    fn roll_random_obstacle(&self) -> obstacle::Obstacle {
+        let size: (f32, f32) = (100.0, 100.0);
+        let height: f32 = 200.0;
+        let center: (f32, f32) = self.random_map_location(size);
+        obstacle::Obstacle::new(center, size, height)
+    }
+
+    fn random_map_location(&self, size: (f32, f32)) -> (f32, f32) {
+        let x_max: f32 = (self.map_width - size.0) * 0.50;
+        let x_min: f32 = -x_max;
+        let z_max: f32 = self.map_length - size.1 * 0.50;
+        let z_min: f32 = size.1 * 0.50;
+        let x: f32 = engine::gen_range(x_min, x_max);
+        let z: f32 = engine::gen_range(z_min, z_max);
+        (x, z)
     }
 }
