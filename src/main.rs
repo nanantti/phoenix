@@ -15,9 +15,9 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new(camera_height: f32, map_width: f32) -> Game {
+    pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Game {
         Game {
-            game_map: map::Map::new(camera_height, map_width),
+            game_map: map::Map::new(camera_height, map_width, map_length),
             phoenix: player::Player::new(-camera_height),
             projection: projection::Projection::new(camera_height),
             last_reset_timeframe: 0.0,
@@ -52,6 +52,7 @@ fn foobar() -> Game {
     let mut game = Game::new(
         0.50 * engine::get_screen_height(),
         engine::get_screen_width(),
+        engine::get_screen_width() * 2.0,
     );
     game.add_obstacle(obstacle::Obstacle::new(
         (200.0, 200.0),

@@ -6,15 +6,17 @@ use super::rectangle;
 pub struct Map {
     camera_height: f32,
     map_width: f32,
+    map_length: f32,
     obstacles: Vec<obstacle::Obstacle>,
 }
 
 impl Map {
     const FENCE_WIDTH_PX: f32 = 40.0;
-    pub fn new(camera_height: f32, map_width: f32) -> Map {
+    pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Map {
         Map {
             camera_height,
             map_width,
+            map_length,
             obstacles: Vec::new(),
         }
     }
@@ -61,7 +63,9 @@ impl Map {
         let z_offset = self.z_grid_offset(tile_size, projection);
         let mut z = range.0;
         while z < range.1 {
-            self.draw_horizontal_line(z - z_offset, projection);
+            if z <= self.map_length {
+                self.draw_horizontal_line(z - z_offset, projection);
+            }
             z += tile_size;
         }
     }
@@ -75,7 +79,7 @@ impl Map {
     fn draw_vertical_line(&self, x: f32, projection: &projection::Projection) {
         let z_limits = projection.get_view_zone_z_range();
         let bottom = vector3d::Vector3d::new(x, -self.camera_height, z_limits.0);
-        let top = vector3d::Vector3d::new(x, -self.camera_height, z_limits.1);
+        let top = vector3d::Vector3d::new(x, -self.camera_height, self.map_length);
         engine::draw_line(projection.to_screen(bottom), projection.to_screen(top));
     }
 
