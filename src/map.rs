@@ -15,10 +15,9 @@ impl Map {
     const FENCE_WIDTH_PX: f32 = 40.0;
     const FENCE_HEIGHT_PX: f32 = 100.0;
     const ENDGOAL_DEPTH_PX: f32 = 100.0;
-    const N_TILES_SIDE_TO_SIDE: f32 = 8.0;
 
     pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Map {
-        let tile_size = map_width / Map::N_TILES_SIDE_TO_SIDE;
+        let tile_size = super::PLAYER_WIDTH;
         let mut map = Map {
             camera_height,
             map_width,

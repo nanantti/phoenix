@@ -5,6 +5,8 @@ mod player;
 mod projection;
 mod rectangle;
 
+const PLAYER_WIDTH: f32 = 100.0;
+
 pub struct Game {
     game_map: map::Map,
     phoenix: player::Player,

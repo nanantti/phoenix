@@ -2,7 +2,6 @@ use super::engine;
 use super::projection;
 use super::rectangle;
 
-const PLAYER_WIDTH: f32 = 100.0;
 const PLAYER_DEPTH: f32 = 10.0;
 const PLAYER_Z: f32 = 25.0;
 const FLOAT_HEIGHT: f32 = 25.0;
@@ -23,7 +22,7 @@ pub struct Player {
 impl Player {
     pub fn new(map_y: f32) -> Player {
         Player {
-            shape: rectangle::Rectangle::new((0.0, PLAYER_Z), (PLAYER_WIDTH, PLAYER_DEPTH)),
+            shape: rectangle::Rectangle::new((0.0, PLAYER_Z), (super::PLAYER_WIDTH, PLAYER_DEPTH)),
             y: map_y + FLOAT_HEIGHT,
             last_update_time: 0.0,
             fwd_speed: INITAL_FWD_SPEED,
