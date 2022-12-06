@@ -22,6 +22,18 @@ impl Map {
         };
 
         map.add_obstacle(obstacle::Obstacle::new(
+            ((map_width + Map::FENCE_WIDTH_PX) * 0.50, map_length * 0.50 ),
+            (Map::FENCE_WIDTH_PX, map_length),
+            100.0,
+        ));
+
+        map.add_obstacle(obstacle::Obstacle::new(
+            (-(map_width + Map::FENCE_WIDTH_PX) * 0.50, map_length * 0.50 ),
+            (Map::FENCE_WIDTH_PX, map_length),
+            100.0,
+        ));
+
+        map.add_obstacle(obstacle::Obstacle::new(
             (0.0, map_length + 0.50 * Map::ENDGOAL_DEPTH_PX),
             (map_width + 2.0 * Map::FENCE_WIDTH_PX, Map::ENDGOAL_DEPTH_PX),
             100.0,
@@ -47,7 +59,7 @@ impl Map {
         for obstacle in &self.obstacles {
             obstacle.draw(projection, -self.camera_height);
         }
-        self.draw_map_fence(projection);
+        //self.draw_map_fence(projection);
     }
 
     pub fn draw_grid(&self, projection: &projection::Projection) {
