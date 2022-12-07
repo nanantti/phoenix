@@ -5,7 +5,7 @@ mod player;
 mod projection;
 mod rectangle;
 
-const PLAYER_WIDTH: f32 = 100.0;
+const PLAYER_WIDTH: f32 = 25.0;
 
 pub struct Game {
     game_map: map::Map,
@@ -54,7 +54,7 @@ impl Game {
 
 fn foobar() -> Game {
     let camera_drop: f32 = 0.50 * engine::get_screen_height();
-    let map_width: f32 = 1.0 * engine::get_screen_width();
+    let map_width: f32 = 2.0 * engine::get_screen_width();
     let map_length: f32 = 6.0 * engine::get_screen_width();
     let mut game = Game::new(camera_drop, map_width, map_length);
     game

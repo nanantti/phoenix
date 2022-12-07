@@ -12,6 +12,7 @@ pub struct Map {
 }
 
 impl Map {
+    const TILE_SIZE_PX: f32 = 100.0;
     const FENCE_WIDTH_PX: f32 = 40.0;
     const FENCE_HEIGHT_PX: f32 = 100.0;
     const ENDGOAL_DEPTH_PX: f32 = 100.0;
@@ -22,7 +23,7 @@ impl Map {
     const AVERAGE_OBSTACLE_AREA: f32 = Map::OBSTACLE_SIDE_AVG_PX * Map::OBSTACLE_SIDE_AVG_PX;
 
     pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Map {
-        let tile_size = super::PLAYER_WIDTH;
+        let tile_size = Map::TILE_SIZE_PX;
         let mut map = Map {
             camera_height,
             map_width,
