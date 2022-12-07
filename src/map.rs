@@ -17,6 +17,9 @@ impl Map {
     const ENDGOAL_DEPTH_PX: f32 = 100.0;
     const OBSTACLE_SIDE_MIN_PX: f32 = 50.0;
     const OBSTACLE_SIDE_MAX_PX: f32 = 150.0;
+    const OBSTACLE_SIDE_AVG_PX: f32 =
+        (Map::OBSTACLE_SIDE_MIN_PX + Map::OBSTACLE_SIDE_MAX_PX) * 0.50;
+    const AVERAGE_OBSTACLE_AREA: f32 = Map::OBSTACLE_SIDE_AVG_PX * Map::OBSTACLE_SIDE_AVG_PX;
 
     pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Map {
         let tile_size = super::PLAYER_WIDTH;
@@ -29,7 +32,7 @@ impl Map {
         };
         map.add_fences();
         map.add_endgoal();
-        map.roll_map(20);
+        map.roll_map(0.10);
         map
     }
 
@@ -137,13 +140,21 @@ impl Map {
         engine::draw_line(projection.to_screen(left), projection.to_screen(right));
     }
 
-    fn roll_map(&mut self, n_tries: i32) {
-        for _ in 0..n_tries {
+    fn roll_map(&mut self, area_ratio: f32) {
+        for _ in 0..self.get_n_tries(area_ratio) {
             let random_obstacle = self.roll_random_obstacle();
             if !self.check_collision_obst(&random_obstacle) {
                 self.add_obstacle(random_obstacle);
             }
         }
+    }
+
+    fn get_n_tries(&self, area_ratio: f32) -> i32 {
+        (self.map_area() * area_ratio / Map::AVERAGE_OBSTACLE_AREA).round() as i32
+    }
+
+    fn map_area(&self) -> f32 {
+        self.map_width * self.map_length
     }
 
     fn roll_random_obstacle(&self) -> obstacle::Obstacle {
