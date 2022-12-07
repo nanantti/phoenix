@@ -75,7 +75,7 @@ impl Player {
     }
 
     fn update_size_position(&mut self, active_keys: &engine::MoveKeys, delta_t: f32) {
-        let move_dist = delta_t * INITAL_SIDE_SPEED;
+        let move_dist = delta_t * self.fwd_speed;
         if active_keys.left && !active_keys.right {
             self.shape.move_x(-move_dist);
         }
