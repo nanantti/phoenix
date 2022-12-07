@@ -145,8 +145,10 @@ impl Map {
     }
 
     fn roll_random_obstacle(&self) -> obstacle::Obstacle {
+        let h_min = 100.0;
+        let h_max = self.camera_height * 2.0;
+        let height: f32 = engine::gen_range(h_min, h_max);
         let size: (f32, f32) = (100.0, 100.0);
-        let height: f32 = 200.0;
         let center: (f32, f32) = self.random_map_location(size);
         obstacle::Obstacle::new(center, size, height)
     }
@@ -155,7 +157,7 @@ impl Map {
         let x_max: f32 = (self.map_width - size.0) * 0.50;
         let x_min: f32 = -x_max;
         let z_max: f32 = self.map_length - size.1 * 0.50;
-        let z_min: f32 = size.1 * 0.50;
+        let z_min: f32 = size.1 * 5.00;
         let x: f32 = engine::gen_range(x_min, x_max);
         let z: f32 = engine::gen_range(z_min, z_max);
         (x, z)
