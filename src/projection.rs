@@ -40,7 +40,8 @@ impl Projection {
     }
 
     pub fn set_fov(&mut self, fov_pu: f32) {
-        self.fov_distance = Projection::FOV_MIN + (fov_pu) * (Projection::FOV_MAX - Projection::FOV_MIN);
+        self.fov_distance =
+            Projection::FOV_MIN + (fov_pu) * (Projection::FOV_MAX - Projection::FOV_MIN);
     }
 
     pub fn make_compensated_projection(base: &Projection, offset: (f32, f32)) -> Projection {

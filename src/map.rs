@@ -15,6 +15,8 @@ impl Map {
     const FENCE_WIDTH_PX: f32 = 40.0;
     const FENCE_HEIGHT_PX: f32 = 100.0;
     const ENDGOAL_DEPTH_PX: f32 = 100.0;
+    const OBSTACLE_SIDE_MIN_PX: f32 = 50.0;
+    const OBSTACLE_SIDE_MAX_PX: f32 = 150.0;
 
     pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Map {
         let tile_size = super::PLAYER_WIDTH;
@@ -90,7 +92,7 @@ impl Map {
     }
 
     pub fn draw_grid(&self, projection: &projection::Projection) {
-        self.draw_vertical_grid_lines(self.tile_size, projection);
+        //self.draw_vertical_grid_lines(self.tile_size, projection);
         self.draw_horizontal_grid_lines(self.tile_size, projection);
     }
 
@@ -145,10 +147,8 @@ impl Map {
     }
 
     fn roll_random_obstacle(&self) -> obstacle::Obstacle {
-        let h_min = 100.0;
-        let h_max = self.camera_height * 2.0;
-        let height: f32 = engine::gen_range(h_min, h_max);
-        let size: (f32, f32) = (100.0, 100.0);
+        let height: f32 = self.random_height();
+        let size: (f32, f32) = Map::random_size();
         let center: (f32, f32) = self.random_map_location(size);
         obstacle::Obstacle::new(center, size, height)
     }
@@ -160,6 +160,18 @@ impl Map {
         let z_min: f32 = size.1 * 5.00;
         let x: f32 = engine::gen_range(x_min, x_max);
         let z: f32 = engine::gen_range(z_min, z_max);
+        (x, z)
+    }
+
+    fn random_height(&self) -> f32 {
+        let h_min = 100.0;
+        let h_max = self.camera_height * 2.0;
+        engine::gen_range(h_min, h_max)
+    }
+
+    fn random_size() -> (f32, f32) {
+        let x: f32 = engine::gen_range(Map::OBSTACLE_SIDE_MIN_PX, Map::OBSTACLE_SIDE_MAX_PX);
+        let z: f32 = engine::gen_range(Map::OBSTACLE_SIDE_MIN_PX, Map::OBSTACLE_SIDE_MAX_PX);
         (x, z)
     }
 }

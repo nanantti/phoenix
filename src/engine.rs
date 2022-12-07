@@ -1,5 +1,5 @@
 // Graphics
-const LINE_WIDTH: f32 = 2.0;
+const LINE_WIDTH: f32 = 1.0;
 pub const BACKGROUND_COLOR: macroquad::prelude::Color = macroquad::prelude::BLACK;
 pub const LINE_COLOR: macroquad::prelude::Color = macroquad::prelude::WHITE;
 pub const BACK_COLOR: macroquad::color::Color = macroquad::color::Color {
