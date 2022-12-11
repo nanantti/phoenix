@@ -9,6 +9,8 @@ pub struct Map {
     map_length: f32,
     obstacles: Vec<obstacle::Obstacle>,
     tile_size: f32,
+    best_distance_z: f32,
+    best_time_seconds: f32,
 }
 
 impl Map {
@@ -30,6 +32,8 @@ impl Map {
             map_length,
             obstacles: Vec::new(),
             tile_size,
+            best_distance_z: -1.0,
+            best_time_seconds: -1.0,
         };
         map.add_fences();
         map.add_endgoal();
@@ -93,6 +97,7 @@ impl Map {
         for obstacle in &self.obstacles {
             obstacle.draw(projection, -self.camera_height);
         }
+        self.draw_best_distance_line(projection);
     }
 
     pub fn draw_grid(&self, projection: &projection::Projection) {
@@ -115,7 +120,7 @@ impl Map {
         let mut z = range.0;
         while z < range.1 {
             if z <= self.map_length {
-                self.draw_horizontal_line(z - z_offset, projection);
+                self.draw_horizontal_line(z - z_offset, projection, engine::DEFAULT_LINE);
             }
             z += tile_size;
         }
@@ -134,13 +139,23 @@ impl Map {
         engine::draw_line(projection.to_screen(bottom), projection.to_screen(top));
     }
 
-    fn draw_horizontal_line(&self, z: f32, projection: &projection::Projection) {
+    fn draw_horizontal_line(
+        &self,
+        z: f32,
+        projection: &projection::Projection,
+        draw_params: engine::DrawParameters,
+    ) {
         let x = 0.50 * self.map_width;
         let left = vector3d::Vector3d::new(x, -self.camera_height, z);
         let right = vector3d::Vector3d::new(-x, -self.camera_height, z);
-        engine::draw_line(projection.to_screen(left), projection.to_screen(right));
+        engine::draw_line_personalized(
+            projection.to_screen(left),
+            projection.to_screen(right),
+            draw_params,
+        );
     }
 
+    // Roll obstacles.
     fn roll_map(&mut self, area_ratio: f32) {
         for _ in 0..self.get_n_tries(area_ratio) {
             let random_obstacle = self.roll_random_obstacle();
@@ -185,5 +200,14 @@ impl Map {
         let x: f32 = engine::gen_range(Map::OBSTACLE_SIDE_MIN_PX, Map::OBSTACLE_SIDE_MAX_PX);
         let z: f32 = engine::gen_range(Map::OBSTACLE_SIDE_MIN_PX, Map::OBSTACLE_SIDE_MAX_PX);
         (x, z)
+    }
+
+    // Draw holographic hud
+    pub fn set_best_distance(&mut self, best_dist: f32) {
+        self.best_distance_z = best_dist;
+    }
+
+    fn draw_best_distance_line(&self, projection: &projection::Projection) {
+        self.draw_horizontal_line(self.best_distance_z, projection, engine::HUD_LINE);
     }
 }
