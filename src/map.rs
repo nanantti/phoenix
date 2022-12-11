@@ -208,6 +208,9 @@ impl Map {
     }
 
     fn draw_best_distance_line(&self, projection: &projection::Projection) {
-        self.draw_horizontal_line(self.best_distance_z, projection, engine::HUD_LINE);
+        let line_location = (0.0, self.best_distance_z);
+        if projection.is_point_in_view_zone(&line_location) {
+            self.draw_horizontal_line(self.best_distance_z, projection, engine::HUD_LINE);
+        }
     }
 }

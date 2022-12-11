@@ -1,11 +1,11 @@
 // Graphics
 pub const BACKGROUND_COLOR: macroquad::prelude::Color = macroquad::prelude::BLACK;
 pub const DEFAULT_LINE: DrawParameters = DrawParameters {
-    color: MaterialColor::Map,
+    color: macroquad::prelude::WHITE,
     line_width: 1.0,
 };
 pub const HUD_LINE: DrawParameters = DrawParameters {
-    color: MaterialColor::Hud,
+    color: macroquad::prelude::YELLOW,
     line_width: 2.0,
 };
 pub const BACK_COLOR: macroquad::color::Color = macroquad::color::Color {
@@ -17,20 +17,8 @@ pub const BACK_COLOR: macroquad::color::Color = macroquad::color::Color {
 };
 
 pub struct DrawParameters {
-    color: MaterialColor,
+    color: macroquad::prelude::Color,
     line_width: f32,
-}
-
-pub enum MaterialColor {
-    Map,
-    Hud,
-}
-
-fn get_color(color: MaterialColor) -> macroquad::color::Color {
-    match color {
-        MaterialColor::Map => macroquad::prelude::WHITE,
-        MaterialColor::Hud => macroquad::prelude::YELLOW,
-    }
 }
 
 pub fn clear_background() {
@@ -46,10 +34,16 @@ pub fn draw_line_personalized(
     p2: vector2d::Vector2D<f32>,
     draw_params: DrawParameters,
 ) {
-    let color = get_color(draw_params.color);
     let pt1 = transform(p1);
     let pt2 = transform(p2);
-    macroquad::shapes::draw_line(pt1.x, pt1.y, pt2.x, pt2.y, draw_params.line_width, color);
+    macroquad::shapes::draw_line(
+        pt1.x,
+        pt1.y,
+        pt2.x,
+        pt2.y,
+        draw_params.line_width,
+        draw_params.color,
+    );
 }
 
 pub fn transform(p: vector2d::Vector2D<f32>) -> vector2d::Vector2D<f32> {
