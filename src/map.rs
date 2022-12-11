@@ -203,8 +203,8 @@ impl Map {
     }
 
     // Draw holographic hud
-    pub fn set_best_distance(&mut self, best_dist: f32) {
-        self.best_distance_z = best_dist;
+    pub fn log_endrun_distance(&mut self, best_dist: f32) {
+        self.best_distance_z = self.best_distance_z.max(best_dist);
     }
 
     fn draw_best_distance_line(&self, projection: &projection::Projection) {

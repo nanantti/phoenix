@@ -47,7 +47,7 @@ impl Game {
     }
     pub fn reset(&mut self, time: f64) {
         let player_z = self.phoenix.get_position().1;
-        self.game_map.set_best_distance(player_z);
+        self.game_map.log_endrun_distance(player_z);
         self.phoenix = player::Player::new(-self.camera_height);
         self.projection = projection::Projection::new(self.camera_height);
         self.last_reset_timeframe = time;
