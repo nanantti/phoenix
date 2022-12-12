@@ -1,3 +1,8 @@
+pub struct PointScreen {
+    pub x: f32,
+    pub y: f32,
+}
+
 // Graphics
 pub const BACKGROUND_COLOR: macroquad::prelude::Color = macroquad::prelude::BLACK;
 pub const DEFAULT_LINE: DrawParameters = DrawParameters {
@@ -25,13 +30,13 @@ pub fn clear_background() {
     macroquad::prelude::clear_background(BACKGROUND_COLOR);
 }
 
-pub fn draw_line(p1: vector2d::Vector2D<f32>, p2: vector2d::Vector2D<f32>) {
+pub fn draw_line(p1: PointScreen, p2: PointScreen) {
     draw_line_personalized(p1, p2, DEFAULT_LINE);
 }
 
 pub fn draw_line_personalized(
-    p1: vector2d::Vector2D<f32>,
-    p2: vector2d::Vector2D<f32>,
+    p1: PointScreen,
+    p2: PointScreen,
     draw_params: DrawParameters,
 ) {
     let pt1 = transform(p1);
@@ -46,8 +51,8 @@ pub fn draw_line_personalized(
     );
 }
 
-pub fn transform(p: vector2d::Vector2D<f32>) -> vector2d::Vector2D<f32> {
-    vector2d::Vector2D {
+pub fn transform(p: PointScreen) -> PointScreen {
+    PointScreen {
         x: p.x + get_screen_width() * 0.50,
         y: -p.y + get_screen_height() * 0.50,
     }

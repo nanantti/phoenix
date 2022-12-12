@@ -1,3 +1,5 @@
+use super::engine;
+
 pub struct Point3D {
     pub x: f32,
     pub y: f32,
@@ -35,10 +37,10 @@ impl Projection {
         }
     }
 
-    pub fn to_screen(&self, point: &Point3D) -> vector2d::Vector2D<f32> {
+    pub fn to_screen(&self, point: &Point3D) -> engine::PointScreen {
         let corrected_z = point.z - self.offset_z;
         let projection: f32 = self.fov_distance / (corrected_z + self.fov_distance);
-        vector2d::Vector2D {
+        engine::PointScreen {
             x: (point.x - self.offset_x) * projection,
             y: point.y * projection,
         }
