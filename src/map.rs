@@ -215,7 +215,12 @@ impl Map {
     }
 
     pub fn log_endrun_time(&mut self, time_interval: f64) {
-        self.best_time_seconds = time_interval as f32;
+        if self.best_time_seconds < 0.0 {
+            self.best_time_seconds = time_interval as f32;
+        }
+        else {
+            self.best_time_seconds = (time_interval as f32).min(self.best_time_seconds);
+        }
     }
 
     fn draw_best_distance_line(&self, projection: &projection::Projection) {
