@@ -25,6 +25,7 @@ pub struct Map {
     tile_size: f32,
     best_distance_z: f32,
     best_time_seconds: f32,
+    finish_line_z: f32,
 }
 
 impl Map {
@@ -48,11 +49,20 @@ impl Map {
             tile_size,
             best_distance_z: -1.0,
             best_time_seconds: -1.0,
+            finish_line_z: map_length,
         };
         map.add_fences();
-        map.add_endgoal();
+        //map.add_endgoal();
         map.roll_map(0.10);
         map
+    }
+
+    pub fn check_game_over(&self, player_shape: &rectangle::Rectangle) -> bool {
+        return self.check_collision(player_shape) || self.check_game_win(player_shape);
+    }
+
+    pub fn check_game_win(&self, player_shape: &rectangle::Rectangle) -> bool {
+        return player_shape.get_center().1 >= self.finish_line_z;
     }
 
     fn add_endgoal(&mut self) {
@@ -88,7 +98,7 @@ impl Map {
         self.obstacles.push(obstacle);
     }
 
-    pub fn check_collision(&self, player_shape: &rectangle::Rectangle) -> bool {
+    fn check_collision(&self, player_shape: &rectangle::Rectangle) -> bool {
         for obstacle in &self.obstacles {
             if obstacle.check_collision(player_shape) {
                 return true;
@@ -204,6 +214,10 @@ impl Map {
         self.best_distance_z = self.best_distance_z.max(best_dist);
     }
 
+    pub fn log_endrun_time(&mut self, time_interval: f64) {
+        self.best_time_seconds = time_interval as f32;
+    }
+
     fn draw_best_distance_line(&self, projection: &projection::Projection) {
         let line_location = (0.0, self.best_distance_z);
         let pole_location = MapPoint::new(self.map_width * 0.50, self.best_distance_z);
@@ -230,8 +244,17 @@ impl Map {
         projection: &projection::Projection,
         anchor: &projection::Point3D,
     ) {
-        let message = format!{"best distance: {:.prec$}", self.best_distance_z, prec = 0}.to_string();
+        let message: &str = &self.get_best_line_message();
         engine::draw_text(&message, projection.to_screen(anchor), engine::TEXT_DEFAULT);
+    }
+
+    fn get_best_line_message(&self) -> String {
+        if self.best_time_seconds > 0.0 {
+            format! {"best time: {:.prec$}", self.best_time_seconds, prec = 3}.to_string()
+        }
+        else {
+            format! {"best distance: {:.prec$}", self.best_distance_z, prec = 0}.to_string()
+        }
     }
 
     fn to_3d(&self, point: &MapPoint, height: f32) -> projection::Point3D {
