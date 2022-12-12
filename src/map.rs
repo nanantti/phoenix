@@ -101,17 +101,7 @@ impl Map {
     }
 
     pub fn draw_grid(&self, projection: &projection::Projection) {
-        //self.draw_vertical_grid_lines(self.tile_size, projection);
-        self.draw_horizontal_grid_lines(self.tile_size, projection);
-    }
-
-    fn draw_vertical_grid_lines(&self, tile_size: f32, projection: &projection::Projection) {
-        let mut x = 0.0;
-        while x < self.map_width * 0.50 {
-            self.draw_vertical_line(x, projection);
-            self.draw_vertical_line(-x, projection);
-            x += tile_size;
-        }
+       self.draw_horizontal_grid_lines(self.tile_size, projection);
     }
 
     fn draw_horizontal_grid_lines(&self, tile_size: f32, projection: &projection::Projection) {
@@ -130,13 +120,6 @@ impl Map {
         let viewport_anchor = projection.get_view_zone_z_range().0;
         let anchor_grid_displacement = ((viewport_anchor as i32) % (tile_size as i32)) as f32;
         anchor_grid_displacement
-    }
-
-    fn draw_vertical_line(&self, x: f32, projection: &projection::Projection) {
-        let z_limits = projection.get_view_zone_z_range();
-        let bottom = vector3d::Vector3d::new(x, -self.camera_height, z_limits.0);
-        let top = vector3d::Vector3d::new(x, -self.camera_height, self.map_length);
-        engine::draw_line(projection.to_screen(bottom), projection.to_screen(top));
     }
 
     fn draw_horizontal_line(
