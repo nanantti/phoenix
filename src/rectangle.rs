@@ -20,7 +20,7 @@ impl Rectangle {
         if 2.0 * dy <= vv && 2.0 * dx <= hh {
             return true;
         }
-        return false;
+        false
     }
 
     pub fn get_corners(&self, y: f32) -> [projection::Point3D; 4] {
@@ -34,7 +34,7 @@ impl Rectangle {
         let p3 = projection::Point3D::new(x_righ, y, z_near);
         let p4 = projection::Point3D::new(x_left, y, z_near);
 
-        return [p1, p2, p3, p4];
+        [p1, p2, p3, p4]
     }
 
     fn get_corners_xz(&self) -> [(f32, f32); 4] {
@@ -43,7 +43,7 @@ impl Rectangle {
         let p2 = (corners[1].x, corners[1].z);
         let p3 = (corners[2].x, corners[2].z);
         let p4 = (corners[3].x, corners[3].z);
-        return [p1, p2, p3, p4];
+        [p1, p2, p3, p4]
     }
 
     pub fn draw(&self, y: f32, projection: &projection::Projection) {

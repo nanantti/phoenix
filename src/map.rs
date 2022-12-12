@@ -13,7 +13,7 @@ pub struct MapPoint {
 
 impl MapPoint {
     pub fn new(x: f32, z: f32) -> MapPoint {
-        MapPoint { x: x, z: z }
+        MapPoint { x, z }
     }
 }
 
@@ -32,7 +32,6 @@ impl Map {
     const TILE_SIZE_PX: f32 = 100.0;
     const FENCE_WIDTH_PX: f32 = 40.0;
     const FENCE_HEIGHT_PX: f32 = 100.0;
-    const ENDGOAL_DEPTH_PX: f32 = 100.0;
     const OBSTACLE_SIDE_MIN_PX: f32 = 50.0;
     const OBSTACLE_SIDE_MAX_PX: f32 = 150.0;
     const OBSTACLE_SIDE_AVG_PX: f32 =
@@ -58,22 +57,11 @@ impl Map {
     }
 
     pub fn check_game_over(&self, player_shape: &rectangle::Rectangle) -> bool {
-        return self.check_collision(player_shape) || self.check_game_win(player_shape);
+        self.check_collision(player_shape) || self.check_game_win(player_shape)
     }
 
     pub fn check_game_win(&self, player_shape: &rectangle::Rectangle) -> bool {
-        return player_shape.get_center().1 >= self.finish_line_z;
-    }
-
-    fn add_endgoal(&mut self) {
-        self.add_obstacle(obstacle::Obstacle::new(
-            (0.0, self.map_length + 0.50 * Map::ENDGOAL_DEPTH_PX),
-            (
-                self.map_width + 2.0 * Map::FENCE_WIDTH_PX,
-                Map::ENDGOAL_DEPTH_PX,
-            ),
-            Map::FENCE_HEIGHT_PX,
-        ));
+        player_shape.get_center().1 >= self.finish_line_z
     }
 
     fn add_fences(&mut self) {
@@ -142,8 +130,7 @@ impl Map {
 
     fn z_grid_offset(&self, tile_size: f32, projection: &projection::Projection) -> f32 {
         let viewport_anchor = projection.get_view_zone_z_range().0;
-        let anchor_grid_displacement = ((viewport_anchor as i32) % (tile_size as i32)) as f32;
-        anchor_grid_displacement
+        ((viewport_anchor as i32) % (tile_size as i32)) as f32
     }
 
     fn draw_horizontal_line(
@@ -217,8 +204,7 @@ impl Map {
     pub fn log_endrun_time(&mut self, time_interval: f64) {
         if self.best_time_seconds < 0.0 {
             self.best_time_seconds = time_interval as f32;
-        }
-        else {
+        } else {
             self.best_time_seconds = (time_interval as f32).min(self.best_time_seconds);
         }
     }
@@ -234,8 +220,8 @@ impl Map {
 
     fn draw_pole(&self, projection: &projection::Projection, pole_location: &MapPoint) {
         let pole_height: f32 = 200.0;
-        let bot = self.to_3d(&pole_location, 0.0);
-        let top = self.to_3d(&pole_location, pole_height);
+        let bot = self.to_3d(pole_location, 0.0);
+        let top = self.to_3d(pole_location, pole_height);
         engine::draw_line_personalized(
             projection.to_screen(&bot),
             projection.to_screen(&top),
@@ -250,15 +236,14 @@ impl Map {
         anchor: &projection::Point3D,
     ) {
         let message: &str = &self.get_best_line_message();
-        engine::draw_text(&message, projection.to_screen(anchor), engine::TEXT_DEFAULT);
+        engine::draw_text(message, projection.to_screen(anchor), engine::TEXT_DEFAULT);
     }
 
     fn get_best_line_message(&self) -> String {
         if self.best_time_seconds > 0.0 {
-            format! {"best time: {:.prec$}", self.best_time_seconds, prec = 3}.to_string()
-        }
-        else {
-            format! {"best distance: {:.prec$}", self.best_distance_z, prec = 0}.to_string()
+            format! {"best time: {:.prec$}", self.best_time_seconds, prec = 3}
+        } else {
+            format! {"best distance: {:.prec$}", self.best_distance_z, prec = 0}
         }
     }
 

@@ -95,7 +95,7 @@ impl Player {
         if current_time - self.last_update_time >= FRAME_UPDATE_SECONDS {
             return false;
         }
-        return true;
+        true
     }
 
     pub fn get_position(&self) -> (f32, f32) {

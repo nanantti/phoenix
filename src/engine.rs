@@ -5,25 +5,6 @@ pub struct PointScreen {
 
 // Graphics
 pub const BACKGROUND_COLOR: macroquad::prelude::Color = macroquad::prelude::BLACK;
-pub const DEFAULT_LINE: DrawParameters = DrawParameters {
-    color: macroquad::prelude::WHITE,
-    line_width: 1.0,
-};
-pub const HUD_LINE: DrawParameters = DrawParameters {
-    color: macroquad::prelude::YELLOW,
-    line_width: 2.0,
-};
-pub const BACK_COLOR: macroquad::color::Color = macroquad::color::Color {
-    //#4F5458
-    r: 79.0,
-    g: 84.0,
-    b: 88.0,
-    a: 1.0,
-};
-pub const TEXT_DEFAULT: TextParameters = TextParameters {
-    color: macroquad::prelude::YELLOW,
-    font_size: 20.0,
-};
 
 pub struct DrawParameters {
     color: macroquad::prelude::Color,
@@ -34,6 +15,21 @@ pub struct TextParameters {
     color: macroquad::prelude::Color,
     font_size: f32,
 }
+
+pub const DEFAULT_LINE: DrawParameters = DrawParameters {
+    color: macroquad::prelude::WHITE,
+    line_width: 1.0,
+};
+
+pub const HUD_LINE: DrawParameters = DrawParameters {
+    color: macroquad::prelude::YELLOW,
+    line_width: 2.0,
+};
+
+pub const TEXT_DEFAULT: TextParameters = TextParameters {
+    color: macroquad::prelude::YELLOW,
+    font_size: 20.0,
+};
 
 pub fn clear_background() {
     macroquad::prelude::clear_background(BACKGROUND_COLOR);
