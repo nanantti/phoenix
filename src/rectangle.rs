@@ -23,16 +23,16 @@ impl Rectangle {
         return false;
     }
 
-    pub fn get_corners(&self, y: f32) -> [vector3d::Vector3d<f32>; 4] {
+    pub fn get_corners(&self, y: f32) -> [projection::Point3D; 4] {
         let x_left = self.center.0 - 0.50 * self.size.0;
         let x_righ = self.center.0 + 0.50 * self.size.0;
         let z_near = self.center.1 - 0.50 * self.size.1;
         let z_far = self.center.1 + 0.50 * self.size.1;
 
-        let p1 = vector3d::Vector3d::new(x_left, y, z_far);
-        let p2 = vector3d::Vector3d::new(x_righ, y, z_far);
-        let p3 = vector3d::Vector3d::new(x_righ, y, z_near);
-        let p4 = vector3d::Vector3d::new(x_left, y, z_near);
+        let p1 = projection::Point3D::new(x_left, y, z_far);
+        let p2 = projection::Point3D::new(x_righ, y, z_far);
+        let p3 = projection::Point3D::new(x_righ, y, z_near);
+        let p4 = projection::Point3D::new(x_left, y, z_near);
 
         return [p1, p2, p3, p4];
     }
@@ -50,20 +50,20 @@ impl Rectangle {
         let corners = self.get_corners(y);
 
         engine::draw_line(
-            projection.to_screen(corners[0]),
-            projection.to_screen(corners[1]),
+            projection.to_screen(&corners[0]),
+            projection.to_screen(&corners[1]),
         );
         engine::draw_line(
-            projection.to_screen(corners[1]),
-            projection.to_screen(corners[2]),
+            projection.to_screen(&corners[1]),
+            projection.to_screen(&corners[2]),
         );
         engine::draw_line(
-            projection.to_screen(corners[2]),
-            projection.to_screen(corners[3]),
+            projection.to_screen(&corners[2]),
+            projection.to_screen(&corners[3]),
         );
         engine::draw_line(
-            projection.to_screen(corners[3]),
-            projection.to_screen(corners[0]),
+            projection.to_screen(&corners[3]),
+            projection.to_screen(&corners[0]),
         );
     }
 

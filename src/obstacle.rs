@@ -31,8 +31,8 @@ impl Obstacle {
 
         for i in 0..4 {
             engine::draw_line(
-                projection.to_screen(corners_low[i]),
-                projection.to_screen(corners_high[i]),
+                projection.to_screen(&corners_low[i]),
+                projection.to_screen(&corners_high[i]),
             );
         }
     }

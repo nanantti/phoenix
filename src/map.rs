@@ -129,11 +129,11 @@ impl Map {
         draw_params: engine::DrawParameters,
     ) {
         let x = 0.50 * self.map_width;
-        let left = vector3d::Vector3d::new(x, -self.camera_height, z);
-        let right = vector3d::Vector3d::new(-x, -self.camera_height, z);
+        let left = projection::Point3D::new(x, -self.camera_height, z);
+        let right = projection::Point3D::new(-x, -self.camera_height, z);
         engine::draw_line_personalized(
-            projection.to_screen(left),
-            projection.to_screen(right),
+            projection.to_screen(&left),
+            projection.to_screen(&right),
             draw_params,
         );
     }

@@ -1,3 +1,17 @@
+pub struct Point3D {
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
+}
+
+impl Point3D {
+    pub fn new(x: f32, y:f32, z:f32) -> Point3D {
+        Point3D {
+            x, y, z,
+        }
+    }
+}
+
 pub struct Projection {
     fov_distance: f32,
     offset_x: f32,
@@ -21,7 +35,7 @@ impl Projection {
         }
     }
 
-    pub fn to_screen(&self, point: vector3d::Vector3d<f32>) -> vector2d::Vector2D<f32> {
+    pub fn to_screen(&self, point: &Point3D) -> vector2d::Vector2D<f32> {
         let corrected_z = point.z - self.offset_z;
         let projection: f32 = self.fov_distance / (corrected_z + self.fov_distance);
         vector2d::Vector2D {
