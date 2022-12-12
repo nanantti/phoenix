@@ -3,6 +3,9 @@ use super::obstacle;
 use super::projection;
 use super::rectangle;
 
+// TODO: use MapPoint instead of (f32, f32)
+// TODO: reference to projection as struct member, instead of passing reference around
+
 pub struct MapPoint {
     x: f32,
     z: f32,
@@ -227,7 +230,8 @@ impl Map {
         projection: &projection::Projection,
         anchor: &projection::Point3D,
     ) {
-        engine::draw_text("foo", projection.to_screen(anchor), engine::TEXT_DEFAULT);
+        let message = format!{"best distance: {:.prec$}", self.best_distance_z, prec = 0}.to_string();
+        engine::draw_text(&message, projection.to_screen(anchor), engine::TEXT_DEFAULT);
     }
 
     fn to_3d(&self, point: &MapPoint, height: f32) -> projection::Point3D {
