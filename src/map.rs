@@ -57,7 +57,8 @@ impl Map {
             best_line: BestLine::new(),
         };
         map.add_fences();
-        map.roll_map(0.10);
+        let mut roller = ObstacleRoller::new(&mut map);
+        roller.roll_map(0.10);
         map
     }
 
@@ -162,13 +163,22 @@ impl Map {
             draw_params,
         );
     }
+}
 
-    // Roll obstacles.
+pub struct ObstacleRoller<'a> {
+    map: &'a mut Map,
+}
+
+impl ObstacleRoller<'_> {
+    pub fn new(map: &mut Map) -> ObstacleRoller {
+        ObstacleRoller { map }
+    }
+
     fn roll_map(&mut self, area_ratio: f32) {
         for _ in 0..self.get_n_tries(area_ratio) {
             let random_obstacle = self.roll_random_obstacle();
-            if !self.check_collision_obst(&random_obstacle) {
-                self.add_obstacle(random_obstacle);
+            if !self.map.check_collision_obst(&random_obstacle) {
+                self.map.add_obstacle(random_obstacle);
             }
         }
     }
@@ -178,20 +188,20 @@ impl Map {
     }
 
     fn map_area(&self) -> f32 {
-        self.map_width * self.map_length
+        self.map.map_width * self.map.map_length
     }
 
     fn roll_random_obstacle(&self) -> obstacle::Obstacle {
         let height: f32 = self.random_height();
-        let size: (f32, f32) = Map::random_size();
+        let size: (f32, f32) = ObstacleRoller::random_size();
         let center: (f32, f32) = self.random_map_location(size);
         obstacle::Obstacle::new(center, size, height)
     }
 
     fn random_map_location(&self, size: (f32, f32)) -> (f32, f32) {
-        let x_max: f32 = (self.map_width - size.0) * 0.50;
+        let x_max: f32 = (self.map.map_width - size.0) * 0.50;
         let x_min: f32 = -x_max;
-        let z_max: f32 = self.map_length - size.1 * 0.50;
+        let z_max: f32 = self.map.map_length - size.1 * 0.50;
         let z_min: f32 = size.1 * 5.00;
         let x: f32 = engine::gen_range(x_min, x_max);
         let z: f32 = engine::gen_range(z_min, z_max);
@@ -200,7 +210,7 @@ impl Map {
 
     fn random_height(&self) -> f32 {
         let h_min = 100.0;
-        let h_max = self.camera_height * 2.0;
+        let h_max = self.map.camera_height * 2.0;
         engine::gen_range(h_min, h_max)
     }
 
