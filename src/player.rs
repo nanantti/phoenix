@@ -146,13 +146,6 @@ mod tests {
         right: false,
     };
 
-    const DOWN_PRESS: engine::MoveKeys = engine::MoveKeys {
-        up: false,
-        down: true,
-        left: false,
-        right: false,
-    };
-
     const NEXT_FRAME: f64 = FRAME_UPDATE_SECONDS * (1.05 as f64);
 
     #[test]

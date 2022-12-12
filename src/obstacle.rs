@@ -16,7 +16,7 @@ impl Obstacle {
     }
 
     pub fn draw(&self, projection: &projection::Projection, y_level: f32) {
-        if !self.base.is_rectangle_in_view_range(&projection) {
+        if !self.base.is_rectangle_in_view_range(projection) {
             return;
         }
 

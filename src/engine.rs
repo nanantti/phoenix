@@ -94,9 +94,9 @@ pub fn get_active_move_keys() -> MoveKeys {
 }
 
 // Random
-pub fn set_rand_seed(seed: u64) {
-    macroquad::rand::srand(seed);
-}
+//pub fn set_rand_seed(seed: u64) {
+//    macroquad::rand::srand(seed);
+//}
 
 pub fn gen_range<T: macroquad::rand::RandomRange>(low: T, high: T) -> T {
     macroquad::rand::gen_range::<T>(low, high)

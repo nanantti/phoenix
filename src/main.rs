@@ -13,7 +13,6 @@ pub struct Game {
     projection: projection::Projection,
     last_reset_timeframe: f64,
     camera_height: f32,
-    map_width: f32,
 }
 
 impl Game {
@@ -24,7 +23,6 @@ impl Game {
             projection: projection::Projection::new(camera_height),
             last_reset_timeframe: 0.0,
             camera_height,
-            map_width,
         }
     }
     pub fn update(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {
