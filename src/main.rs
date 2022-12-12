@@ -58,7 +58,7 @@ fn foobar() -> Game {
     let camera_drop: f32 = 0.50 * engine::get_screen_height();
     let map_width: f32 = 2.0 * engine::get_screen_width();
     let map_length: f32 = 6.0 * engine::get_screen_width();
-    let mut game = Game::new(camera_drop, map_width, map_length);
+    let game = Game::new(camera_drop, map_width, map_length);
     game
 }
 
@@ -67,7 +67,6 @@ async fn main() {
     let mut game = foobar();
     loop {
         engine::clear_background();
-        //game.update_screen_size(engine::get_screen_size());
         game.update(engine::get_time(), &engine::get_active_move_keys());
         game.draw();
         if game.check_game_over() {

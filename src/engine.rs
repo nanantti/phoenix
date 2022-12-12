@@ -53,10 +53,6 @@ pub fn transform(p: vector2d::Vector2D<f32>) -> vector2d::Vector2D<f32> {
     }
 }
 
-pub fn get_screen_size() -> (f32, f32) {
-    (get_screen_width(), get_screen_height())
-}
-
 pub fn get_screen_height() -> f32 {
     macroquad::prelude::screen_height()
 }

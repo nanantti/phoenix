@@ -101,7 +101,7 @@ impl Map {
     }
 
     pub fn draw_grid(&self, projection: &projection::Projection) {
-       self.draw_horizontal_grid_lines(self.tile_size, projection);
+        self.draw_horizontal_grid_lines(self.tile_size, projection);
     }
 
     fn draw_horizontal_grid_lines(&self, tile_size: f32, projection: &projection::Projection) {
