@@ -15,6 +15,14 @@ impl MapPoint {
     pub fn new(x: f32, z: f32) -> MapPoint {
         MapPoint { x, z }
     }
+
+    fn to_3d(&self, point_height: f32, camera_height: f32) -> projection::Point3D {
+        projection::Point3D {
+            x: self.x,
+            y: point_height - camera_height,
+            z: self.z,
+        }
+    }
 }
 
 pub struct Map {
@@ -23,9 +31,8 @@ pub struct Map {
     map_length: f32,
     obstacles: Vec<obstacle::Obstacle>,
     tile_size: f32,
-    best_distance_z: f32,
-    best_time_seconds: f32,
     finish_line_z: f32,
+    best_line: BestLine,
 }
 
 impl Map {
@@ -46,9 +53,8 @@ impl Map {
             map_length,
             obstacles: Vec::new(),
             tile_size,
-            best_distance_z: -1.0,
-            best_time_seconds: -1.0,
             finish_line_z: map_length,
+            best_line: BestLine::new(),
         };
         map.add_fences();
         map.roll_map(0.10);
@@ -57,10 +63,10 @@ impl Map {
 
     pub fn reset_run(&mut self, time: f64, player_shape: &rectangle::Rectangle) {
         if self.check_game_win(player_shape) {
-            self.log_endrun_time(time);
+            self.best_line.log_endrun_time(time);
         }
         let player_z = player_shape.get_center().1;
-        self.log_endrun_distance(player_z);
+        self.best_line.log_endrun_distance(player_z);
     }
 
     pub fn check_game_over(&self, player_shape: &rectangle::Rectangle) -> bool {
@@ -116,10 +122,11 @@ impl Map {
         for obstacle in &self.obstacles {
             obstacle.draw(projection, -self.camera_height);
         }
-        self.draw_best_distance_line(projection);
+        self.best_line
+            .draw_best_distance_line(projection, self.map_width, self.camera_height);
     }
 
-    pub fn draw_grid(&self, projection: &projection::Projection) {
+    fn draw_grid(&self, projection: &projection::Projection) {
         self.draw_horizontal_grid_lines(self.tile_size, projection);
     }
 
@@ -202,8 +209,21 @@ impl Map {
         let z: f32 = engine::gen_range(Map::OBSTACLE_SIDE_MIN_PX, Map::OBSTACLE_SIDE_MAX_PX);
         (x, z)
     }
+}
 
-    // Draw holographic hud
+pub struct BestLine {
+    best_distance_z: f32,
+    best_time_seconds: f32,
+}
+
+impl BestLine {
+    pub fn new() -> BestLine {
+        BestLine {
+            best_distance_z: -1.0,
+            best_time_seconds: -1.0,
+        }
+    }
+
     fn log_endrun_distance(&mut self, best_dist: f32) {
         self.best_distance_z = self.best_distance_z.max(best_dist);
     }
@@ -216,25 +236,60 @@ impl Map {
         }
     }
 
-    fn draw_best_distance_line(&self, projection: &projection::Projection) {
-        let line_location = (0.0, self.best_distance_z);
-        let pole_location = MapPoint::new(self.map_width * 0.50, self.best_distance_z);
-        if projection.is_point_in_view_zone(&line_location) {
-            self.draw_horizontal_line(self.best_distance_z, projection, engine::HUD_LINE);
-            self.draw_pole(projection, &pole_location);
-        }
-    }
-
-    fn draw_pole(&self, projection: &projection::Projection, pole_location: &MapPoint) {
+    fn draw_pole(
+        &self,
+        projection: &projection::Projection,
+        pole_location: &MapPoint,
+        camera_height: f32,
+    ) {
         let pole_height: f32 = 200.0;
-        let bot = self.to_3d(pole_location, 0.0);
-        let top = self.to_3d(pole_location, pole_height);
+        let bot = pole_location.to_3d(0.0, camera_height);
+        let top = pole_location.to_3d(pole_height, camera_height);
         engine::draw_line_personalized(
             projection.to_screen(&bot),
             projection.to_screen(&top),
             engine::HUD_LINE,
         );
         self.draw_best_line_text(projection, &top);
+    }
+
+    pub fn draw_best_distance_line(
+        &self,
+        projection: &projection::Projection,
+        map_width: f32,
+        camera_height: f32,
+    ) {
+        let z_line = self.best_distance_z;
+        let line_location = (0.0, z_line);
+        let pole_location = MapPoint::new(map_width * 0.50, z_line);
+        if projection.is_point_in_view_zone(&line_location) {
+            self.draw_horizontal_line(
+                z_line,
+                projection,
+                engine::HUD_LINE,
+                map_width,
+                camera_height,
+            );
+            self.draw_pole(projection, &pole_location, camera_height);
+        }
+    }
+
+    fn draw_horizontal_line(
+        &self,
+        z: f32,
+        projection: &projection::Projection,
+        draw_params: engine::DrawParameters,
+        map_width: f32,
+        camera_height: f32,
+    ) {
+        let x = 0.50 * map_width;
+        let left = projection::Point3D::new(x, -camera_height, z);
+        let right = projection::Point3D::new(-x, -camera_height, z);
+        engine::draw_line_personalized(
+            projection.to_screen(&left),
+            projection.to_screen(&right),
+            draw_params,
+        );
     }
 
     fn draw_best_line_text(
@@ -251,14 +306,6 @@ impl Map {
             format! {"best time: {:.prec$}", self.best_time_seconds, prec = 3}
         } else {
             format! {"best distance: {:.prec$}", self.best_distance_z, prec = 0}
-        }
-    }
-
-    fn to_3d(&self, point: &MapPoint, height: f32) -> projection::Point3D {
-        projection::Point3D {
-            x: point.x,
-            y: height - self.camera_height,
-            z: point.z,
         }
     }
 }
