@@ -7,10 +7,8 @@ pub struct Point3D {
 }
 
 impl Point3D {
-    pub fn new(x: f32, y:f32, z:f32) -> Point3D {
-        Point3D {
-            x, y, z,
-        }
+    pub fn new(x: f32, y: f32, z: f32) -> Point3D {
+        Point3D { x, y, z }
     }
 }
 

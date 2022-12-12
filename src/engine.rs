@@ -20,10 +20,19 @@ pub const BACK_COLOR: macroquad::color::Color = macroquad::color::Color {
     b: 88.0,
     a: 1.0,
 };
+pub const TEXT_DEFAULT: TextParameters = TextParameters {
+    color: macroquad::prelude::YELLOW,
+    font_size: 20.0,
+};
 
 pub struct DrawParameters {
     color: macroquad::prelude::Color,
     line_width: f32,
+}
+
+pub struct TextParameters {
+    color: macroquad::prelude::Color,
+    font_size: f32,
 }
 
 pub fn clear_background() {
@@ -34,11 +43,7 @@ pub fn draw_line(p1: PointScreen, p2: PointScreen) {
     draw_line_personalized(p1, p2, DEFAULT_LINE);
 }
 
-pub fn draw_line_personalized(
-    p1: PointScreen,
-    p2: PointScreen,
-    draw_params: DrawParameters,
-) {
+pub fn draw_line_personalized(p1: PointScreen, p2: PointScreen, draw_params: DrawParameters) {
     let pt1 = transform(p1);
     let pt2 = transform(p2);
     macroquad::shapes::draw_line(
@@ -99,4 +104,10 @@ pub fn set_rand_seed(seed: u64) {
 
 pub fn gen_range<T: macroquad::rand::RandomRange>(low: T, high: T) -> T {
     macroquad::rand::gen_range::<T>(low, high)
+}
+
+// text
+pub fn draw_text(message: &str, p: PointScreen, params: TextParameters) {
+    let pt = transform(p);
+    macroquad::prelude::draw_text(message, pt.x, pt.y, params.font_size, params.color);
 }

@@ -3,6 +3,17 @@ use super::obstacle;
 use super::projection;
 use super::rectangle;
 
+pub struct MapPoint {
+    x: f32,
+    z: f32,
+}
+
+impl MapPoint {
+    pub fn new(x: f32, z: f32) -> MapPoint {
+        MapPoint { x: x, z: z }
+    }
+}
+
 pub struct Map {
     camera_height: f32,
     map_width: f32,
@@ -192,8 +203,38 @@ impl Map {
 
     fn draw_best_distance_line(&self, projection: &projection::Projection) {
         let line_location = (0.0, self.best_distance_z);
+        let pole_location = MapPoint::new(self.map_width * 0.50, self.best_distance_z);
         if projection.is_point_in_view_zone(&line_location) {
             self.draw_horizontal_line(self.best_distance_z, projection, engine::HUD_LINE);
+            self.draw_pole(projection, &pole_location);
+        }
+    }
+
+    fn draw_pole(&self, projection: &projection::Projection, pole_location: &MapPoint) {
+        let pole_height: f32 = 200.0;
+        let bot = self.to_3d(&pole_location, 0.0);
+        let top = self.to_3d(&pole_location, pole_height);
+        engine::draw_line_personalized(
+            projection.to_screen(&bot),
+            projection.to_screen(&top),
+            engine::HUD_LINE,
+        );
+        self.draw_best_line_text(projection, &top);
+    }
+
+    fn draw_best_line_text(
+        &self,
+        projection: &projection::Projection,
+        anchor: &projection::Point3D,
+    ) {
+        engine::draw_text("foo", projection.to_screen(anchor), engine::TEXT_DEFAULT);
+    }
+
+    fn to_3d(&self, point: &MapPoint, height: f32) -> projection::Point3D {
+        projection::Point3D {
+            x: point.x,
+            y: height - self.camera_height,
+            z: point.z,
         }
     }
 }
