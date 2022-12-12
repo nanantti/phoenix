@@ -44,12 +44,8 @@ impl Game {
         self.game_map.add_obstacle(obstacle);
     }
     pub fn reset(&mut self, time: f64) {
-        let player_z = self.phoenix.get_position().1;
-        if self.game_map.check_game_win(self.phoenix.get_shape()) {
-            self.game_map
-                .log_endrun_time(time - self.last_reset_timeframe);
-        }
-        self.game_map.log_endrun_distance(player_z);
+        let delta_t = time - self.last_reset_timeframe;
+        self.game_map.reset_run(delta_t, self.phoenix.get_shape());
         self.phoenix = player::Player::new(-self.camera_height);
         self.projection = projection::Projection::new(self.camera_height);
         self.last_reset_timeframe = time;

@@ -51,16 +51,23 @@ impl Map {
             finish_line_z: map_length,
         };
         map.add_fences();
-        //map.add_endgoal();
         map.roll_map(0.10);
         map
+    }
+
+    pub fn reset_run(&mut self, time: f64, player_shape: &rectangle::Rectangle) {
+        if self.check_game_win(player_shape) {
+            self.log_endrun_time(time);
+        }
+        let player_z = player_shape.get_center().1;
+        self.log_endrun_distance(player_z);
     }
 
     pub fn check_game_over(&self, player_shape: &rectangle::Rectangle) -> bool {
         self.check_collision(player_shape) || self.check_game_win(player_shape)
     }
 
-    pub fn check_game_win(&self, player_shape: &rectangle::Rectangle) -> bool {
+    fn check_game_win(&self, player_shape: &rectangle::Rectangle) -> bool {
         player_shape.get_center().1 >= self.finish_line_z
     }
 
@@ -197,11 +204,11 @@ impl Map {
     }
 
     // Draw holographic hud
-    pub fn log_endrun_distance(&mut self, best_dist: f32) {
+    fn log_endrun_distance(&mut self, best_dist: f32) {
         self.best_distance_z = self.best_distance_z.max(best_dist);
     }
 
-    pub fn log_endrun_time(&mut self, time_interval: f64) {
+    fn log_endrun_time(&mut self, time_interval: f64) {
         if self.best_time_seconds < 0.0 {
             self.best_time_seconds = time_interval as f32;
         } else {
