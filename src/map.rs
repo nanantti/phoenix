@@ -122,7 +122,7 @@ impl Map {
         let mut z = range.0;
         while z < range.1 {
             if z <= self.map_length {
-                self.draw_horizontal_line(z - z_offset, projection, engine::DEFAULT_LINE);
+                self.draw_horizontal_line(z - z_offset, projection, engine::GRID_LINE);
             }
             z += tile_size;
         }

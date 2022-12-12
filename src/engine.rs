@@ -21,6 +21,11 @@ pub const DEFAULT_LINE: DrawParameters = DrawParameters {
     line_width: 1.0,
 };
 
+pub const GRID_LINE: DrawParameters = DrawParameters {
+    color: macroquad::prelude::GRAY,
+    line_width: 0.25,
+};
+
 pub const HUD_LINE: DrawParameters = DrawParameters {
     color: macroquad::prelude::YELLOW,
     line_width: 2.0,
