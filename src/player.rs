@@ -4,13 +4,14 @@ use super::rectangle;
 
 const PLAYER_DEPTH: f32 = 10.0;
 const PLAYER_Z: f32 = 25.0;
-const FLOAT_HEIGHT: f32 = 25.0;
+const FLOAT_HEIGHT: f32 = 15.0 + 0.50 * super::PLAYER_WIDTH * 0.70;
 const FRAME_UPDATE_SECONDS: f64 = 1.0 / 50.0;
 const INITAL_FWD_SPEED: f32 = 400.0;
 const FWD_ACELERATION: f32 = 400.0;
 const MIN_SPEED: f32 = 200.0;
 const MAX_SPEED: f32 = 1000.0;
 const TILT_ANGLE_DEG: f32 = 45.0;
+const TILT_ANGLE_RAD: f32 = std::f32::consts::PI * TILT_ANGLE_DEG / 180.0;
 
 pub struct Player {
     shape: rectangle::Rectangle,
@@ -56,17 +57,16 @@ impl Player {
     }
 
     fn roll_angle(&self) -> f32 {
-        let tilt_ang_rad: f32 = std::f32::consts::PI * TILT_ANGLE_DEG / 180.0;
         match self.roll_position {
             RollPosition::Level => 0.0,
-            RollPosition::Left => -tilt_ang_rad,
-            RollPosition::Right => tilt_ang_rad,
+            RollPosition::Left => -TILT_ANGLE_RAD,
+            RollPosition::Right => TILT_ANGLE_RAD,
         }
     }
 
     fn get_triangle_corners(&self) -> [projection::Point3D; 3] {
         let pos = self.get_position();
-        let def = 0.7071 * 0.50 * super::PLAYER_WIDTH;
+        let def = 0.50 * super::PLAYER_WIDTH;
         let ang = self.roll_angle();
         let p1 = projection::Point3D::new(pos.0, self.y, pos.1 + 0.50 * PLAYER_DEPTH);
         let p2 = projection::Point3D::new(
