@@ -10,12 +10,20 @@ const INITAL_FWD_SPEED: f32 = 400.0;
 const FWD_ACELERATION: f32 = 400.0;
 const MIN_SPEED: f32 = 200.0;
 const MAX_SPEED: f32 = 1000.0;
+const TILT_ANGLE_DEG: f32 = 45.0;
 
 pub struct Player {
     shape: rectangle::Rectangle,
     y: f32,
     last_update_time: f64,
     fwd_speed: f32,
+    roll_position: RollPosition,
+}
+
+enum RollPosition {
+    Level,
+    Left,
+    Right,
 }
 
 impl Player {
@@ -25,6 +33,7 @@ impl Player {
             y: map_y + FLOAT_HEIGHT,
             last_update_time: 0.0,
             fwd_speed: INITAL_FWD_SPEED,
+            roll_position: RollPosition::Level,
         }
     }
 
@@ -44,6 +53,77 @@ impl Player {
         self.shape.draw(self.get_y(), &compensated_projection);
         self.shape
             .draw(self.get_y() - FLOAT_HEIGHT, &compensated_projection);
+        self.draw_body(&compensated_projection);
+        self.draw_shadow(&compensated_projection);
+    }
+
+    fn roll_angle(&self) -> f32 {
+        let tilt_ang_rad: f32 = std::f32::consts::PI * TILT_ANGLE_DEG / 180.0;
+        match self.roll_position {
+            RollPosition::Level => 0.0,
+            RollPosition::Left => -tilt_ang_rad,
+            RollPosition::Right => tilt_ang_rad,
+        }
+    }
+
+    fn get_triangle_corners(&self) -> [projection::Point3D; 3] {
+        let pos = self.get_position();
+        let def = 0.7071 * 0.50 * super::PLAYER_WIDTH;
+        let ang = self.roll_angle();
+        let p1 = projection::Point3D::new(pos.0, self.y, pos.1 + 0.50 * PLAYER_DEPTH);
+        let p2 = projection::Point3D::new(
+            pos.0 + 0.50 * super::PLAYER_WIDTH * ang.cos(),
+            self.y - ang.sin() * def,
+            pos.1 - 0.50 * PLAYER_DEPTH,
+        );
+        let p3 = projection::Point3D::new(
+            pos.0 - 0.50 * super::PLAYER_WIDTH * ang.cos(),
+            self.y + ang.sin() * def,
+            pos.1 - 0.50 * PLAYER_DEPTH,
+        );
+        [p1, p2, p3]
+    }
+
+    fn draw_body(&self, projection: &projection::Projection) {
+        let corners = self.get_triangle_corners();
+        self.draw_triangle(corners, projection);
+    }
+
+    fn project_shadow(
+        &self,
+        mut corners: [projection::Point3D; 3],
+        y_projection: f32,
+    ) -> [projection::Point3D; 3] {
+        corners[0].y = y_projection;
+        corners[1].y = y_projection;
+        corners[2].y = y_projection;
+        corners
+    }
+
+    fn draw_shadow(&self, projection: &projection::Projection) {
+        let corners = self.get_triangle_corners();
+        let shadow_y = self.get_y() - FLOAT_HEIGHT;
+        let shadow_corners = self.project_shadow(corners, shadow_y);
+        self.draw_triangle(shadow_corners, projection);
+    }
+
+    fn draw_triangle(
+        &self,
+        corners: [projection::Point3D; 3],
+        projection: &projection::Projection,
+    ) {
+        engine::draw_line(
+            projection.to_screen(&corners[0]),
+            projection.to_screen(&corners[1]),
+        );
+        engine::draw_line(
+            projection.to_screen(&corners[1]),
+            projection.to_screen(&corners[2]),
+        );
+        engine::draw_line(
+            projection.to_screen(&corners[2]),
+            projection.to_screen(&corners[0]),
+        );
     }
 
     pub fn update(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {
@@ -53,6 +133,7 @@ impl Player {
         let delta_t = self.time_since_last_update(current_time);
         self.update_fwd_speed(active_keys, delta_t);
         self.update_size_position(active_keys, delta_t);
+        self.update_roll_position(active_keys);
         self.update_forward_position(delta_t);
         self.last_update_time = current_time;
     }
@@ -80,6 +161,16 @@ impl Player {
         }
         if !active_keys.left && active_keys.right {
             self.shape.move_x(move_dist);
+        }
+    }
+
+    fn update_roll_position(&mut self, active_keys: &engine::MoveKeys) {
+        self.roll_position = RollPosition::Level;
+        if active_keys.left && !active_keys.right {
+            self.roll_position = RollPosition::Left;
+        }
+        if !active_keys.left && active_keys.right {
+            self.roll_position = RollPosition::Right;
         }
     }
 
