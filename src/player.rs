@@ -50,9 +50,7 @@ impl Player {
             projection,
             self.shape.get_center(),
         );
-        self.shape.draw(self.get_y(), &compensated_projection);
-        self.shape
-            .draw(self.get_y() - FLOAT_HEIGHT, &compensated_projection);
+        //self.shape.draw(self.get_y(), &compensated_projection);
         self.draw_body(&compensated_projection);
         self.draw_shadow(&compensated_projection);
     }
