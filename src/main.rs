@@ -7,7 +7,7 @@ mod rectangle;
 
 const PLAYER_WIDTH: f32 = 25.0;
 
-pub struct Game {
+pub struct Level {
     game_map: map::Map,
     phoenix: player::Player,
     projection: projection::Projection,
@@ -15,9 +15,9 @@ pub struct Game {
     camera_height: f32,
 }
 
-impl Game {
-    pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Game {
-        Game {
+impl Level {
+    pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Level {
+        Level {
             game_map: map::Map::new(camera_height, map_width, map_length),
             phoenix: player::Player::new(-camera_height),
             projection: projection::Projection::new(camera_height),
@@ -52,16 +52,16 @@ impl Game {
     }
 }
 
-fn foobar() -> Game {
+fn init_level() -> Level {
     let camera_drop: f32 = 0.350 * engine::get_screen_height();
     let map_width: f32 = 2.0 * engine::get_screen_width();
     let map_length: f32 = 10.0 * engine::get_screen_width();
-    Game::new(camera_drop, map_width, map_length)
+    Level::new(camera_drop, map_width, map_length)
 }
 
 #[macroquad::main("Phoenix")]
 async fn main() {
-    let mut game = foobar();
+    let mut game = init_level();
     loop {
         engine::clear_background();
         game.update(engine::get_time(), &engine::get_active_move_keys());
