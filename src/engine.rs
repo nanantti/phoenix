@@ -36,6 +36,11 @@ pub const TEXT_DEFAULT: TextParameters = TextParameters {
     font_size: 20.0,
 };
 
+pub const TEXT_TITLE: TextParameters = TextParameters {
+    color: macroquad::prelude::RED,
+    font_size: 80.0,
+};
+
 pub fn clear_background() {
     macroquad::prelude::clear_background(BACKGROUND_COLOR);
 }
