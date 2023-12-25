@@ -25,3 +25,7 @@ jobs:
       with:
         name: webasm-artifact
         path: ./target/wasm32-unknown-unknown/release/phoenix.wasm
+    - name: Release Webasm artifact
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ./target/wasm32-unknown-unknown/release/phoenix.wasm
