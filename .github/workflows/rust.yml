@@ -20,4 +20,8 @@ jobs:
       run: rustup target add wasm32-unknown-unknown
     - name: Build Webasm
       run: cargo build --target wasm32-unknown-unknown --release --verbose
-
+    - name: Store Webasm artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: webasm-artifact
+        path: ./target/wasm32-unknown-unknown/release/phoenix.wasm
