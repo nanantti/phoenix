@@ -23,9 +23,5 @@ jobs:
     - name: Store Webasm artifact
       uses: actions/upload-artifact@v4
       with:
-        name: webasm-artifact
+        name: artifact
         path: ./target/wasm32-unknown-unknown/release/phoenix.wasm
-    - name: Release Webasm artifact
-      uses: softprops/action-gh-release@v1
-      with:
-        files: ./target/wasm32-unknown-unknown/release/phoenix.wasm
