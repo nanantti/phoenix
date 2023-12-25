@@ -21,7 +21,7 @@ jobs:
     - name: Build Webasm
       run: cargo build --target wasm32-unknown-unknown --release --verbose
     - name: Store Webasm artifact
-      uses: actions/upload-artifact
+      uses: actions/upload-artifact@v4
       with:
         name: webasm-artifact
         path: ./target/wasm32-unknown-unknown/release/phoenix.wasm
