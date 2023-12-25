@@ -18,7 +18,9 @@ jobs:
     - uses: actions/checkout@v3
     - name: Run tests
       run: cargo test --verbose
+    - name: Add Webasm target
+      run: rustup target add wasm32-unknown-unknown
     - name: Build Webasm
       run: cargo build --target wasm32-unknown-unknown --release --verbose
-    - name: Build
+    - name: Build Local Executable
       run: cargo build --verbose
