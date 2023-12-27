@@ -49,7 +49,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: artifact
-        path: ./target/wasm32-unknown-unknown/release/snake.wasm
+        path: ./target/wasm32-unknown-unknown/release/phoenix.wasm
     - name: Checkout
       uses: actions/checkout@v4
     - name: Get Wasm artifact
