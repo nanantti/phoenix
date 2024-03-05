@@ -123,7 +123,7 @@ mod tests {
         assert_eq! { game.level.phoenix.get_position().1, 25.0}
 
         assert_eq! { game.level.projection.offset_x, 0.0}
-        assert_eq! { game.level.projection.offset_z, 0.0}
+        assert_eq! { game.level.projection.offset_z, 25.0}
     }
 
     #[test]
@@ -137,7 +137,7 @@ mod tests {
         assert_eq! { game.level.phoenix.get_position().1, 25.0}
 
         assert_eq! { game.level.projection.offset_x, 0.0}
-        assert_eq! { game.level.projection.offset_z, 0.0}
+        assert_eq! { game.level.projection.offset_z, 25.0}
     }
 
     #[test]

@@ -11,15 +11,24 @@ pub struct Level {
     camera_height: f32,
 }
 
+const NO_PRESS: engine::MoveKeys = engine::MoveKeys {
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+};
+
 impl Level {
     pub fn new(camera_height: f32, map_width: f32, map_length: f32, time: f64) -> Level {
-        Level {
+        let mut ret = Level {
             game_map: map::Map::new(camera_height, map_width, map_length),
             phoenix: player::Player::new(-camera_height, time),
             projection: projection::Projection::new(camera_height),
             last_reset_timeframe: time,
             camera_height,
-        }
+        };
+        ret.update(time, &NO_PRESS);
+        ret
     }
     pub fn update(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {
         self.phoenix
