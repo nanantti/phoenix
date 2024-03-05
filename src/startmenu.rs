@@ -46,8 +46,20 @@ impl StartMenu {
     }
 
     fn draw_instructions(&self) {
-        engine::draw_text(" [W] : Accelerate", INSTRUCTIONS_ANCHOR, engine::TEXT_INSTRUCTIONS);
-        engine::draw_text("[A|D]: Left|Right", INSTRUCTIONS_ANCHOR2, engine::TEXT_INSTRUCTIONS);
-        engine::draw_text(" [S] : Decelerate", INSTRUCTIONS_ANCHOR3, engine::TEXT_INSTRUCTIONS);
+        engine::draw_text(
+            " [W] : Accelerate",
+            INSTRUCTIONS_ANCHOR,
+            engine::TEXT_INSTRUCTIONS,
+        );
+        engine::draw_text(
+            "[A|D]: Left|Right",
+            INSTRUCTIONS_ANCHOR2,
+            engine::TEXT_INSTRUCTIONS,
+        );
+        engine::draw_text(
+            " [S] : Decelerate",
+            INSTRUCTIONS_ANCHOR3,
+            engine::TEXT_INSTRUCTIONS,
+        );
     }
 }

@@ -124,7 +124,7 @@ impl Map {
             obstacle.draw(projection, -self.camera_height);
         }
         self.best_line
-            .draw_best_distance_line(projection, self.map_width, self.camera_height);
+            .draw(projection, self.map_width, self.camera_height);
     }
 
     fn draw_grid(&self, projection: &projection::Projection) {
@@ -263,12 +263,7 @@ impl BestLine {
         self.draw_best_line_text(projection, &top);
     }
 
-    pub fn draw_best_distance_line(
-        &self,
-        projection: &projection::Projection,
-        map_width: f32,
-        camera_height: f32,
-    ) {
+    pub fn draw(&self, projection: &projection::Projection, map_width: f32, camera_height: f32) {
         let z_line = self.best_distance_z;
         let line_location = (0.0, z_line);
         let pole_location = MapPoint::new(map_width * 0.50, z_line);
