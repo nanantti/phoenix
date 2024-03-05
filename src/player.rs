@@ -5,10 +5,10 @@ use super::rectangle;
 const PLAYER_DEPTH: f32 = 10.0;
 const PLAYER_Z: f32 = 25.0;
 const FLOAT_HEIGHT: f32 = 15.0 + 0.50 * super::PLAYER_WIDTH * 0.70;
-const INITAL_FWD_SPEED: f32 = 400.0;
-const FWD_ACELERATION: f32 = 400.0;
+const INITAL_FWD_SPEED: f32 = 200.0;
+const FWD_ACELERATION: f32 = 1000.0;
 const MIN_SPEED: f32 = 200.0;
-const MAX_SPEED: f32 = 1000.0;
+const MAX_SPEED: f32 = 2000.0;
 const TILT_ANGLE_DEG: f32 = 45.0;
 const TILT_ANGLE_RAD: f32 = std::f32::consts::PI * TILT_ANGLE_DEG / 180.0;
 

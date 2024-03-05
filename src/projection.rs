@@ -20,7 +20,7 @@ pub struct Projection {
 }
 
 impl Projection {
-    const FOV_MAX: f32 = 200.0;
+    const FOV_MAX: f32 = 150.0;
     const FOV_MIN: f32 = 400.0;
     const HORIZON_DELTA: f32 = 10.0;
     const Z_MAX: f32 = 4000.0;
