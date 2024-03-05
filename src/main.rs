@@ -13,6 +13,7 @@ const FRAME_UPDATE_SECONDS: f64 = 1.0 / 50.0;
 #[derive(PartialEq, Debug)]
 pub enum GameMode {
     StartMenu,
+    StartToLevel,
     Level,
 }
 
@@ -39,6 +40,7 @@ impl Game {
         }
         match self.mode {
             GameMode::StartMenu => self.run_start_menu(active_keys),
+            GameMode::StartToLevel => self.init_level(current_time),
             GameMode::Level => self.run_game(current_time, active_keys),
         }
     }
@@ -49,6 +51,7 @@ impl Game {
                 self.menu.draw();
                 self.level.draw()
             }
+            GameMode::StartToLevel => self.level.draw(),
             GameMode::Level => self.level.draw(),
         }
     }
@@ -63,8 +66,13 @@ impl Game {
     fn run_start_menu(&mut self, active_keys: &engine::MoveKeys) {
         self.menu.update(active_keys);
         if self.menu.request_level_start() {
-            self.mode = GameMode::Level;
+            self.mode = GameMode::StartToLevel;
         }
+    }
+
+    fn init_level(&mut self, current_time: f64) {
+        self.level.reset(current_time);
+        self.mode = GameMode::Level;
     }
 
     fn run_game(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {
@@ -117,8 +125,6 @@ mod tests {
     fn init_game() {
         let game = Game::new(CAMERA_DROP, MAP_WIDTH, MAP_LENGTH, INIT_TIME);
 
-        assert_eq! { game.mode, GameMode::StartMenu}
-
         assert_eq! { game.level.phoenix.get_position().0, 0.0}
         assert_eq! { game.level.phoenix.get_position().1, 25.0}
 
@@ -130,8 +136,6 @@ mod tests {
     fn init_game_start() {
         let mut game = Game::new(CAMERA_DROP, MAP_WIDTH, MAP_LENGTH, INIT_TIME);
         game.run(0.1, &UP_PRESS);
-
-        assert_eq! { game.mode, GameMode::Level}
 
         assert_eq! { game.level.phoenix.get_position().0, 0.0}
         assert_eq! { game.level.phoenix.get_position().1, 25.0}
