@@ -5,19 +5,19 @@ use super::projection;
 
 pub struct Level {
     game_map: map::Map,
-    phoenix: player::Player,
-    projection: projection::Projection,
+    pub phoenix: player::Player,
+    pub projection: projection::Projection,
     last_reset_timeframe: f64,
     camera_height: f32,
 }
 
 impl Level {
-    pub fn new(camera_height: f32, map_width: f32, map_length: f32) -> Level {
+    pub fn new(camera_height: f32, map_width: f32, map_length: f32, time: f64) -> Level {
         Level {
             game_map: map::Map::new(camera_height, map_width, map_length),
-            phoenix: player::Player::new(-camera_height),
+            phoenix: player::Player::new(-camera_height, time),
             projection: projection::Projection::new(camera_height),
-            last_reset_timeframe: 0.0,
+            last_reset_timeframe: time,
             camera_height,
         }
     }
@@ -39,7 +39,7 @@ impl Level {
     pub fn reset(&mut self, time: f64) {
         let delta_t = time - self.last_reset_timeframe;
         self.game_map.reset_run(delta_t, self.phoenix.get_shape());
-        self.phoenix = player::Player::new(-self.camera_height);
+        self.phoenix = player::Player::new(-self.camera_height, time);
         self.projection = projection::Projection::new(self.camera_height);
         self.last_reset_timeframe = time;
     }

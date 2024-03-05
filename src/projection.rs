@@ -14,8 +14,8 @@ impl Point3D {
 
 pub struct Projection {
     fov_distance: f32,
-    offset_x: f32,
-    offset_z: f32,
+    pub offset_x: f32,
+    pub offset_z: f32,
     draw_distance: f32,
 }
 
