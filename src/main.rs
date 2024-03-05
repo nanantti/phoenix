@@ -9,12 +9,15 @@ mod startmenu;
 
 const PLAYER_WIDTH: f32 = 25.0;
 const FRAME_UPDATE_SECONDS: f64 = 1.0 / 50.0;
+const GAMEOVER_TIME_SECONDS: f64 = 1.0;
 
 #[derive(PartialEq, Debug)]
 pub enum GameMode {
     StartMenu,
     StartToLevel,
     Level,
+    ToGameOver,
+    GameOver,
 }
 
 struct Game {
@@ -22,6 +25,7 @@ struct Game {
     level: level::Level,
     menu: startmenu::StartMenu,
     last_update_time: f64,
+    gameover_timestamp: f64,
 }
 
 impl Game {
@@ -31,6 +35,7 @@ impl Game {
             level: level::Level::new(camera_drop, map_width, map_length, time),
             menu: startmenu::StartMenu::new(),
             last_update_time: time,
+            gameover_timestamp: 0.0,
         }
     }
 
@@ -42,6 +47,8 @@ impl Game {
             GameMode::StartMenu => self.run_start_menu(active_keys),
             GameMode::StartToLevel => self.init_level(current_time),
             GameMode::Level => self.run_game(current_time, active_keys),
+            GameMode::ToGameOver => self.init_gameover(current_time),
+            GameMode::GameOver => self.run_gameover(current_time),
         }
     }
 
@@ -53,6 +60,8 @@ impl Game {
             }
             GameMode::StartToLevel => self.level.draw(),
             GameMode::Level => self.level.draw(),
+            GameMode::ToGameOver => self.level.draw(),
+            GameMode::GameOver => self.level.draw(),
         }
     }
 
@@ -78,6 +87,18 @@ impl Game {
     fn run_game(&mut self, current_time: f64, active_keys: &engine::MoveKeys) {
         self.level.update(current_time, active_keys);
         if self.level.check_game_over() {
+            self.mode = GameMode::ToGameOver;
+        }
+    }
+
+    fn init_gameover(&mut self, current_time: f64) {
+        self.gameover_timestamp = current_time;
+        self.mode = GameMode::GameOver;
+    }
+
+    fn run_gameover(&mut self, current_time: f64) {
+        if current_time - self.gameover_timestamp > GAMEOVER_TIME_SECONDS {
+            self.mode = GameMode::Level;
             self.level.reset(current_time);
         }
     }
