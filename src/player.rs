@@ -83,7 +83,7 @@ impl Player {
 
     fn draw_body(&self, projection: &projection::Projection) {
         let corners = self.get_triangle_corners();
-        self.draw_triangle(corners, projection);
+        self.draw_triangle(corners, projection, engine::PHOENIX_LINE);
     }
 
     fn project_shadow(
@@ -101,25 +101,29 @@ impl Player {
         let corners = self.get_triangle_corners();
         let shadow_y = self.get_y() - FLOAT_HEIGHT;
         let shadow_corners = self.project_shadow(corners, shadow_y);
-        self.draw_triangle(shadow_corners, projection);
+        self.draw_triangle(shadow_corners, projection, engine::DEFAULT_LINE);
     }
 
     fn draw_triangle(
         &self,
         corners: [projection::Point3D; 3],
         projection: &projection::Projection,
+        line: engine::DrawParameters,
     ) {
-        engine::draw_line(
+        engine::draw_line_personalized(
             projection.to_screen(&corners[0]),
             projection.to_screen(&corners[1]),
+            line,
         );
-        engine::draw_line(
+        engine::draw_line_personalized(
             projection.to_screen(&corners[1]),
             projection.to_screen(&corners[2]),
+            line,
         );
-        engine::draw_line(
+        engine::draw_line_personalized(
             projection.to_screen(&corners[2]),
             projection.to_screen(&corners[0]),
+            line,
         );
     }
 

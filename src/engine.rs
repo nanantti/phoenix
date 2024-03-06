@@ -6,6 +6,7 @@ pub struct PointScreen {
 // Graphics
 pub const BACKGROUND_COLOR: macroquad::prelude::Color = macroquad::prelude::BLACK;
 
+#[derive(Copy, Clone)]
 pub struct DrawParameters {
     color: macroquad::prelude::Color,
     line_width: f32,
@@ -19,6 +20,11 @@ pub struct TextParameters {
 pub const DEFAULT_LINE: DrawParameters = DrawParameters {
     color: macroquad::prelude::WHITE,
     line_width: 1.0,
+};
+
+pub const PHOENIX_LINE: DrawParameters = DrawParameters {
+    color: macroquad::prelude::RED,
+    line_width: 2.0,
 };
 
 pub const GRID_LINE: DrawParameters = DrawParameters {
